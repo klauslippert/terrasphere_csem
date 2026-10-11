@@ -1,0 +1,38 @@
+# elfe3D comparison T4: square loop 2.6 x 2.6 km around the hill, counter-clockwise seen from above.
+# Three layers (interfaces at 200 m and 600 m: thinner layers give > 2 million edges in the elfe3D mesh), no sphere.
+# Heights 0 / +30 / -30 m = flat model, hill, valley (Gaussian, width 150 m, centre at the origin).
+name = "T4_loop_large"
+[terrain]
+width = 150.0
+heights = [0.0, 30.0, -30.0]
+
+[layers]
+depths = [0.0, 200.0, 600.0]
+conductivity = [0.01, 0.005, 0.03]
+
+[receivers]
+profiles = ["x", "y"]
+half_length = 600.0
+spacing = 20.0
+
+[frequencies]
+list = [0.1, 10.0, 1000.0, 100000.0]
+
+[output]
+formats = ["npz", "csv"]
+
+[numerics]
+method = "fft"
+n = 512
+dx = 10.0
+orders = 20
+lowpass = 0.2
+box_correction = true
+box_fmax = 100.0
+
+[[source]]
+type = "rectangle"
+corner1 = [-1300.0, -1300.0]
+corner2 = [1300.0, 1300.0]
+current = 1.0
+gauss = 48

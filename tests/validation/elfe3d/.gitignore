@@ -1,0 +1,11 @@
+# produced by the runs.  Kept in the repository: out/*_receiver_line.txt (results) and logs.tar.gz (elfe3D logs).
+cases/*/elfe3d/*/in/model.[0-9]*
+cases/*/elfe3d/*/in/tetgen.log
+cases/*/elfe3d/*/in/old_*/
+cases/*/elfe3d/*/out/*
+!cases/*/elfe3d/*/out/electric_fields_receiver_line.txt
+!cases/*/elfe3d/*/out/magnetic_fields_receiver_line.txt
+cases/*/elfe3d/*/*.log
+cases/*/elfe3d/*/run.out
+cases/*/elfe3d/*/gmon.out
+run_all.log
