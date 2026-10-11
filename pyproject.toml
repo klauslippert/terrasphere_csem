@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "terrasphere_csem"
+version = "0.1"
+description = "Semi-analytic frequency- and time-domain EM responses of a conductive sphere in a layered earth and of Gaussian topography"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Klaus Lippert" }]
+# tomllib (control files) needs Python >= 3.11; developed and tested with Python 3.13,
+# numpy 2.4, scipy 1.17 and empymod 2.6.
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "scipy",
+    "empymod",
+]
+
+[project.optional-dependencies]
+figures = ["matplotlib"]
+
+[tool.setuptools]
+packages = ["terrasphere_csem"]
