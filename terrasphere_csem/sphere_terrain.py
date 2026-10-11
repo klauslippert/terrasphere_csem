@@ -218,14 +218,16 @@ class SphereTerrainHankel(SphereTerrain):
     order (physical s_m(r) = int c J_m(lambda r) lambda dlambda) is the cylindrical-wave density P = c lambda of
     sphere.SphereModel; the lambda nodes are those of the Hankel grid."""
 
-    def __init__(self, km, hg):
-        """km: SphereModel with the sphere centre on the hill axis; hg: HankelGrid supplying the wavenumber nodes."""
+    def __init__(self, km, hg, n_rho=700, nq=16):
+        """km: SphereModel with the sphere centre on the hill axis; hg: HankelGrid supplying the wavenumber nodes;
+        n_rho, nq: radial table size and nodes per panel of the order-0 evaluation (as in SphereTerrain)."""
         assert abs(km.xc) < 1e-9 and abs(km.yc) < 1e-9, "Hankel series: sphere must lie on the hill axis"
         assert km.zc - km.sphere.b > 0, "the sphere must lie entirely below the surface z = 0"
         self.km, self.g = km, hg
         self.N = km.N
         self.lam = hg.lam; self.wl = hg.wl
         self.mlist = [0] + [s * m for m in range(1, self.N + 1) for s in (1, -1)]
+        self.n_rho, self.nq = n_rho, nq
         self._w = None
 
     def response_order(self, w, m, hd, hu, u):
