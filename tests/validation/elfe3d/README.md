@@ -66,6 +66,6 @@ directory it is started in and writes `out/`; `run.sh` does exactly that.
 
 Refined runs write one block of rows per refinement step; only the last block holds the result.  Conventions:
 E_elfe3D = E, H_elfe3D = -H of this package (both e^{-iwt}).  Meshes (`in/model.<n>.*`, 20-30 GB for all runs) are
-not kept.  Comparison with the series: `skripte/compare_elfe3d.py <case folder>`, `skripte/plot_profiles_freq.py
-<case folder>`.  Regenerate the inputs: `python3 skripte/elfe3d_input.py <case folder>` (settings per band in `BANDS`; the inputs here
+not kept.  Comparison with the series: `scripts/compare_elfe3d.py <case folder>`, `scripts/plot_profiles_freq.py
+<case folder>`.  Regenerate the inputs: `python3 scripts/elfe3d_input.py <case folder>` (settings per band in `BANDS`; the inputs here
 were generated with domain 15 km and at most 3 million unknowns for `hf1k` and `hf100k`).

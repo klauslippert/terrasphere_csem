@@ -10,18 +10,21 @@ from .legendre import norm_nm, pnm_real
 
 
 def zn(n, x, kind):
+    """Spherical Bessel function j_n (kind = 1) or outgoing spherical Hankel function h_n^(1) (kind = 3) of order n."""
     if kind == 1:
         return spherical_jn(n, x)
     return spherical_jn(n, x) + 1j * spherical_yn(n, x)
 
 
 def dzn(n, x, kind):
+    """Derivative with respect to the argument of zn(n, x, kind)."""
     if kind == 1:
         return spherical_jn(n, x, derivative=True)
     return spherical_jn(n, x, derivative=True) + 1j * spherical_yn(n, x, derivative=True)
 
 
 def sph_to_cart(vr, vt, vp, th, ph):
+    """Spherical components (vr, vt, vp) at polar angle th and azimuth ph to a Cartesian array of shape (3,)."""
     st, ct, sp, cp = np.sin(th), np.cos(th), np.sin(ph), np.cos(ph)
     vx = vr * st * cp + vt * ct * cp - vp * sp
     vy = vr * st * sp + vt * ct * sp + vp * cp
@@ -52,4 +55,5 @@ def MN_point(n, m, k, r, th, ph, kind):
 
 
 def Y_nm(n, m, th, ph):
+    """Orthonormal spherical harmonic N_nm P_n^m(cos th) e^{i m ph} for signed m."""
     return norm_nm(n, m) * lpmv(m, n, np.cos(th)) * np.exp(1j * m * ph)

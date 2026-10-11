@@ -5,12 +5,13 @@ import os, sys
 import numpy as np
 from scipy.special import eval_legendre
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from terrasphere_csem.schichten import Schichten
-from terrasphere_csem.quellen import Dipol
-from terrasphere_csem.kugel import Modell, Kugel, Empfaenger
+from terrasphere_csem.layers import LayerStack
+from terrasphere_csem.sources import Dipole
+from terrasphere_csem.sphere import SphereModel, Sphere, Receiver
 
 
 def phi_s_point(r, r0, b, sig_s, sig_h, I=1.0, nmax=60):
+    """Scattered potential at r of a point current source at r0 for a sphere in a full space (Legendre series)."""
     r = np.asarray(r, float); r0 = np.asarray(r0, float)
     R, R0 = np.linalg.norm(r), np.linalg.norm(r0); cg = np.dot(r, r0) / (R * R0)
     tot = 0.0
@@ -30,15 +31,16 @@ def E_s_dc(r, src_pos, psi, b, sig_s, sig_h, dl=0.2, h=1e-2):
 
 
 def test_dc_limit():
+    """Low-frequency limit of the HED response against the direct-current series (two point electrodes)."""
     sig_h, sig_s, b = 0.01, 0.5, 50.0
-    st = Schichten([0.0], [sig_h], sigma_luft=sig_h)
-    zc = 300.0; mod = Modell(st, Kugel(b, sig_s), (0.0, 0.0, zc), nmax=12)
+    st = LayerStack([0.0], [sig_h], sigma_air=sig_h)
+    zc = 300.0; mod = SphereModel(st, Sphere(b, sig_s), (0.0, 0.0, zc), nmax=12)
     src = (120.0, -60.0, 100.0); psi = 0.8
     pts = [(200.0, 150.0, 420.0), (-90.0, 40.0, 180.0), (30.0, -250.0, 300.0)]
     w = 1e-3
     worst = 0.0
     for (x, y, zt) in pts:
-        ours = np.array([mod.streufeld(w, [Dipol('HED', src, 1.0, psi)], [Empfaenger('E', (x, y, zt), e)])[0] for e in np.eye(3)])
+        ours = np.array([mod.scattered_field(w, [Dipole('HED', src, 1.0, psi)], [Receiver('E', (x, y, zt), e)])[0] for e in np.eye(3)])
         # DC reference in the sphere frame (z up): r = (x, y, zc - zt), source (xs, ys, zc - zs); E_z sign flips back
         ref = E_s_dc((x, y, zc - zt), (src[0], src[1], zc - src[2]), psi, b, sig_s, sig_h)
         err = np.max(np.abs(ours - ref)) / np.max(np.abs(ref))

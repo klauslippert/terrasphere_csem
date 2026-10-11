@@ -7,6 +7,9 @@ import numpy as np
 
 
 def ratios_h(z, nmax):
+    """Ratios r_k = h_k^(1)(z)/h_{k-1}^(1)(z), k = 1..nmax, by upward recurrence (stable).
+
+    z: complex argument(s). Returns an array (nmax + 1, *z.shape); row 0 is unused (zero)."""
     z = np.atleast_1d(np.asarray(z, complex))
     r = np.zeros((nmax + 1,) + z.shape, complex)
     r[1] = 1.0 / z - 1j                                   # h_1/h_0 in closed form
@@ -16,6 +19,9 @@ def ratios_h(z, nmax):
 
 
 def ratios_j(z, nmax, extra=40):
+    """Ratios s_k = j_k(z)/j_{k-1}(z), k = 1..nmax, by the downward continued fraction.
+
+    The recurrence starts `extra` + |z| terms above nmax. Returns an array (nmax + 1, *z.shape); row 0 is unused."""
     z = np.atleast_1d(np.asarray(z, complex))
     K = nmax + extra + int(np.max(np.abs(z)))
     sk = np.zeros(z.shape, complex)
@@ -28,6 +34,9 @@ def ratios_j(z, nmax, extra=40):
 
 
 def logderiv_psi(z, nmax, extra=40):
+    """Logarithmic derivative D_n(z) = psi_n'(z)/psi_n(z) of psi_n(z) = z j_n(z), n = 0..nmax, by downward recurrence.
+
+    Returns an array (nmax + 1, *z.shape); the recurrence starts `extra` + |z| degrees above nmax."""
     z = np.atleast_1d(np.asarray(z, complex))
     K = nmax + extra + int(np.max(np.abs(z)))
     D = np.zeros(z.shape, complex)

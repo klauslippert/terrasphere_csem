@@ -1,6 +1,6 @@
 """Mie coefficients: (1) scaled form = direct form; (2) boundary conditions (tangential E and H continuous at
 r = b) satisfied by incident + scattered + interior fields for TE and TM modes, mu_r = 1 and 3; (3) equal to the
-stage-1 code for mu_r = 1; (4) null contrast -> 0."""
+reference 1 code for mu_r = 1; (4) null contrast -> 0."""
 import os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -10,11 +10,13 @@ from terrasphere_csem import MU0
 
 
 def k_of(sig, w, mu_r=1.0):
+    """Wavenumber k = sqrt(i w mu0 mu_r sigma) with Im k >= 0."""
     k = np.sqrt(1j * w * MU0 * mu_r * sig + 0j)
     return k if np.imag(k) >= 0 else -k
 
 
 def test_scaled_vs_direct():
+    """Scaled Mie coefficients against the direct Riccati-Bessel formulas."""
     w, sh, ss, b = 3e3, 0.01, 1.0, 180.0
     for mu_r in (1.0, 3.0):
         k, ks = k_of(sh, w), k_of(ss, w, mu_r)
@@ -56,18 +58,19 @@ def test_boundary_conditions():
     assert worst < 1e-9
 
 
-def test_stage1_and_null():
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'referenz'))
-    from lee1981_koax import Bhat
+def test_reference_and_null():
+    """Mie coefficients against the independent reference implementation; null contrast gives zero."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'reference'))
+    from lee1981_coaxial import Bhat
     w, sh, ss, b = 3e3, 0.01, 1.0, 180.0
     k, ks = k_of(sh, w), k_of(ss, w)
     a, bb = mie_scaled(15, k, ks, b)
     ref = Bhat(15, k, ks, b)
     e = np.max(np.abs(bb[1:] - ref) / np.abs(ref))
     a0, b0 = mie_scaled(15, k, k, b)
-    print(f"b_hat vs stage-1 Bhat: {e:.1e};  null contrast |a|,|b| / |a|,|b|(contrast) = {np.max(np.abs(a0[1:])/np.abs(a[1:])):.1e}, {np.max(np.abs(b0[1:])/np.abs(bb[1:])):.1e}")
+    print(f"b_hat vs reference 1 Bhat: {e:.1e};  null contrast |a|,|b| / |a|,|b|(contrast) = {np.max(np.abs(a0[1:])/np.abs(a[1:])):.1e}, {np.max(np.abs(b0[1:])/np.abs(bb[1:])):.1e}")
     assert e < 1e-13 and np.max(np.abs(b0[1:]) / np.abs(bb[1:])) < 1e-13
 
 
 if __name__ == '__main__':
-    test_scaled_vs_direct(); test_boundary_conditions(); test_stage1_and_null()
+    test_scaled_vs_direct(); test_boundary_conditions(); test_reference_and_null()
