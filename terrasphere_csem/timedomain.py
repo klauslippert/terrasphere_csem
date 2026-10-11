@@ -13,12 +13,12 @@ Two evaluations are provided:
     201 + K frequencies; arbitrary times are allowed (cost up to 201 per time, shared values are reused).
   * `Spectrum` (legacy): cubic spline of Re V over a logarithmic grid.  Its interpolation error dominates at late
     times (1e-2 at 1e-8 of the early value for the sphere response); kept for comparison only.
-Both use the 201-point sine/cosine filter key_201_CosSin_2012 (empymod)."""
+Both use the 201-point sine/cosine filter key_201_2012 (Key 2012, tables in filters/)."""
 import numpy as np
 from scipy.interpolate import CubicSpline
 from scipy.integrate import quad
-from empymod import filters as _flt
-_F = _flt.key_201_CosSin_2012()
+from . import filters as _flt
+_F = _flt.key_201_2012()
 
 
 def omega_grid(t, nw=260):

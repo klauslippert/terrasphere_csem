@@ -10,16 +10,20 @@ readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Klaus Lippert" }]
 # tomllib (control files) needs Python >= 3.11; developed and tested with Python 3.13,
-# numpy 2.4, scipy 1.17 and empymod 2.6.
+# numpy 2.4 and scipy 1.17 (empymod 2.6 for the comparison tests).
 requires-python = ">=3.11"
 dependencies = [
     "numpy",
     "scipy",
-    "empymod",
 ]
 
 [project.optional-dependencies]
 figures = ["matplotlib"]
+# empymod is only needed by the tests that compare against it
+test = ["empymod"]
 
 [tool.setuptools]
-packages = ["terrasphere_csem"]
+packages = ["terrasphere_csem", "terrasphere_csem.filters"]
+
+[tool.setuptools.package-data]
+"terrasphere_csem.filters" = ["*.txt"]

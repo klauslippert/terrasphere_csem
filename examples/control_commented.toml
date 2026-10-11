@@ -1,0 +1,97 @@
+# Example control file for terrasphere_csem, all options explained.
+# Units: SI.  Horizontal positions (x, y) on the surface; z points up; depths are positive downwards.
+# One computation = one folder containing this file as control.toml.
+
+name = "example_hill_valley_sphere"      # label of the run (default: folder name)
+
+# ---------------------------------------------------------------- terrain
+[terrain]
+# Gaussian hill/valley  h(x, y) = H * exp(-(x^2 + y^2) / (2 s^2)), centred at (0, 0).
+width   = 150.0                          # s [m], horizontal width of the hill
+heights = [0.0, 30.0, -30.0]             # H [m]: 0 = flat, > 0 = hill, < 0 = valley.  One run per height.
+
+# ---------------------------------------------------------------- layered earth
+[layers]
+# The top layer carries the terrain: all interfaces must lie below the valley floor.
+depths       = [0.0, 100.0, 350.0]       # depths of the layer tops [m]; the first one is 0, the last layer is a half-space
+conductivity = [0.01, 0.005, 0.03]       # S/m, one value per layer
+
+# ---------------------------------------------------------------- sphere (optional)
+[sphere]
+# Omit the whole block for a run without sphere.
+radius       = 60.0                      # [m]
+conductivity = 1.0                       # S/m
+mu_r         = 1.0                       # relative permeability (1 = non-magnetic)
+center       = [0.0, 0.0, 220.0]         # x, y, depth [m]; with method = "hankel" it must lie on the hill axis (x = y = 0)
+degree       = 10                        # highest multipole degree of the sphere response
+
+# ---------------------------------------------------------------- sources (one or more blocks, fields are summed)
+[[source]]
+type    = "wire"                         # wire | dipole | rectangle | polygon | circle
+start   = [-1750.0, 0.0]                 # grounded wire from start to end [m]
+end     = [-1250.0, 0.0]
+current = 1.0                            # A
+gauss   = 96                             # Gauss points along the wire
+
+# [[source]]
+# type      = "dipole"                   # grounded electric dipole
+# center    = [-1500.0, 0.0]
+# direction = 0.0                        # degrees from x towards y
+# length    = 100.0                      # m
+# current   = 1.0
+#
+# [[source]]
+# type    = "rectangle"                  # rectangular loop
+# corner1 = [-2000.0, -500.0]
+# corner2 = [-1000.0,  500.0]
+# current = 1.0
+#
+# [[source]]
+# type    = "polygon"                    # closed polygonal loop
+# corners = [[-2000.0, -500.0], [-1000.0, -500.0], [-1500.0, 500.0]]
+# current = 1.0
+#
+# [[source]]
+# type     = "circle"                    # circular loop
+# center   = [-1500.0, 0.0]
+# radius   = 300.0
+# current  = 1.0
+# segments = 256
+
+# ---------------------------------------------------------------- receivers
+[receivers]
+profiles    = ["x", "y"]                 # x: along the x-axis (y = 0), y: along the y-axis (x = 0), both through the summit
+half_length = 600.0                      # profiles run from -half_length to +half_length [m]
+spacing     = 20.0                       # receiver spacing [m]
+
+# ---------------------------------------------------------------- frequency OR time domain (give exactly one block)
+[frequencies]
+list = [0.1, 1.0, 1000.0, 100000.0]      # Hz
+
+# [time]
+# tmin   = 1e-5                          # s; the frequencies follow from the Sine/Cosine filter on a lagged time grid
+# tmax   = 10.0                          # s
+# signal = "off"                         # "off" = response to switch-off of the current, "on" = switch-on step
+
+# ---------------------------------------------------------------- output
+[output]
+formats = ["npz", "csv"]                 # npz and/or csv; each file holds all field components
+
+# ---------------------------------------------------------------- numerics (all entries optional, defaults shown)
+[numerics]
+method = "hankel"                        # "hankel": Hankel transform per azimuthal order, no periodic box (default)
+                                         # "fft": 2-D FFT with box correction; needed for a sphere off the hill axis
+m_max      = 40                          # hankel: highest azimuthal order
+n_phi      = 128                         # hankel: azimuth points
+npan_r     = 32                          # hankel: quadrature panels in r
+npan_l     = 32                          # hankel: quadrature panels in the wavenumber
+lam_max    = 0.25                        # hankel: upper wavenumber limit [1/m]
+lowpass    = 0.2                         # smooth wavenumber cut-off [1/m]
+window_radius = 860.0                    # radius [m] beyond which the reference field is tapered off
+window_width  = 40.0                     # width of that taper [m]
+# fft only:
+# n = 512                                # grid points per side
+# dx = 10.0                              # grid spacing [m]
+# orders = 20                            # number of series orders
+# box_correction = true                  # remove the periodic-box error with coarser runs
+# box_fmax = 100.0                       # box correction only up to this frequency [Hz]

@@ -16,7 +16,7 @@ Frame: x, y, z UP (components); time e^{-iwt}.  Checked against empymod and agai
 """
 import numpy as np
 from scipy.interpolate import CubicSpline
-from empymod import filters as _flt
+from . import filters as _flt
 from . import MU0
 from .sources import hed_list
 

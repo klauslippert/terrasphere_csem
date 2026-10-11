@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """First-order null test against empymod.  At null contrast (sigma_s = sigma of its layer) the sphere response
 vanishes identically; its derivative with respect to sigma_s is the Born (Frechet) integral
    dV/dsigma_s = int_sphere E_tx(r) . E_adj(r) dV,
@@ -11,7 +12,7 @@ exercises the source map (Graf decomposition, all orders m, TE and TM), the Mie 
 import os, sys
 import numpy as np
 import empymod
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 from terrasphere_csem import MU0
 from terrasphere_csem.layers import LayerStack
 from terrasphere_csem.sources import Dipole

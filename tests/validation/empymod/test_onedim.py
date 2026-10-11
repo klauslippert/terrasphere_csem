@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """1-D fields (no sphere) of HED, VMD, HMD in full space, half-space and a 3-layer earth against empymod 2.6.0,
 both quasi-static (empymod eperm = 0) and with the conventions of the paper (empymod conversion).
 Expected agreement 1e-8..1e-10, except where source and receiver lie in the same horizontal plane (full space on
@@ -7,7 +8,7 @@ surface-to-surface grounded dipole: 1e-5)."""
 import os, sys
 import numpy as np
 import empymod
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 from terrasphere_csem import MU0
 from terrasphere_csem.layers import LayerStack
 from terrasphere_csem.sources import Dipole

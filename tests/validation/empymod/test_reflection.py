@@ -1,10 +1,11 @@
+# SPDX-License-Identifier: MIT
 """External check of the reflection operator R (sphere -> layers -> sphere) for m = 0 and m = +-1 including the
 TE/TM mixing: a point dipole placed at the sphere centre radiates a pure degree-1 outgoing VSWF; its field
 reflected by the layered earth, re-expanded in regular VSWFs with our R, must equal empymod(layered) -
 empymod(full space) at points around the centre.  VMD -> M_{1,0}; HMD -> M_{1,+-1}; HED -> N_{1,+-1}."""
 import os, sys
 import numpy as np
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from terrasphere_csem import MU0
 from terrasphere_csem.layers import LayerStack

@@ -1,6 +1,6 @@
 """One-dimensional (no sphere) fields of dipole sources in the layered earth, from the same spectral kernels
 that feed the sphere coupling.  The lambda integral is done with Key's 401-point Hankel filter key_401_2009
-(empymod filters; the 201-point filter limits the accuracy to ~1e-5 near the source), the modes are taken about each dipole's own axis (m = 0, +-1 only)."""
+(Key 2009, tables in filters/; the 201-point filter limits the accuracy to ~1e-5 near the source), the modes are taken about each dipole's own axis (m = 0, +-1 only)."""
 import numpy as np
 from . import MU0
 from .sources import dipole_modes

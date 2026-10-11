@@ -60,8 +60,8 @@ def dlf_grid(rho, filt=None):
     """Digital-filter abscissae and weights for int_0^inf f(lam) J_m(lam rho) ... as a weighted sum over lam.
     Returns lam and the two weight sets (w0 for J_0-type, w1 for J_1-type), such that
        int f(lam) J_nu(lam rho) dlam  ~=  sum_i f(lam_i) w_nu_i / (lam_i)  ... see dlf_integrate."""
-    import empymod.filters as F
-    filt = filt or F.Hankel().key_401_2009
+    from . import filters as F
+    filt = filt or F.key_401_2009()
     lam = filt.base / rho
     return lam, filt.j0 / rho, filt.j1 / rho
 
