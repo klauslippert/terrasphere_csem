@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: MIT
 """1-D fields (no sphere) of HED, VMD, HMD in full space, half-space and a 3-layer earth against empymod 2.6.0,
 both quasi-static (empymod eperm = 0) and with the conventions of the paper (empymod conversion).
 Expected agreement 1e-8..1e-10, except where source and receiver lie in the same horizontal plane (full space on

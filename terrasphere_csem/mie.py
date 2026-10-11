@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Mie (T-matrix) coefficients of a homogeneous sphere (radius b, wavenumber k_s, permeability mu_r mu0) in a
 homogeneous host (wavenumber k, mu0).  For an incident regular field  E = sum a_nm M_nm + b_nm N_nm  the
 scattered field is  E_sc = sum (-b_n a_nm) M^(3)_nm + (-a_n b_nm) N^(3)_nm,  with (Bohren & Huffman 1983,

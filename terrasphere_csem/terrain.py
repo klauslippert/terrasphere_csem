@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Gaussian hill or valley on a homogeneous half-space: field expansion in the terrain height
 (time convention e^{-iwt}).
 

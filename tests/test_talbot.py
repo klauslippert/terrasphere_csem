@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: MIT
 """Laplace-domain route to the time domain (fixed Talbot): scattered response of the coaxial loop (1:100 design)
 against the sine-filter route.  The primary half-space voltage against empymod is in
 tests/validation/empymod/test_talbot_empymod.py."""

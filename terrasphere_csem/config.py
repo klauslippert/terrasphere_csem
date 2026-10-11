@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Control file of a computation.
 
 Every computation lives in its own folder with the control file `control.toml`; the series results are written to

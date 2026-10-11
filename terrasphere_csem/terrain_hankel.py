@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Field expansion of the Gaussian terrain with Hankel transforms instead of the periodic 2-D FFT.
 
 The terrain h = H f(r), f = exp(-r^2/2s^2), is rotationally symmetric about the vertical axis through the summit.

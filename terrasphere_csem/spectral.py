@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Plane-wave (Sommerfeld/Weyl) spectra of spherical waves and the spherical-wave content of plane waves,
 for all azimuthal orders m.  These four identities are the bridge between the sphere (spherical modes)
 and the layered earth (plane-wave modes).  Every identity is verified numerically in tests/test_spectral.py.

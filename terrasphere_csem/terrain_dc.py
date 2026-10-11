@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Independent direct-current check for the hill: scalar potential with the same field expansion.
 
 Earth z < h: Lap V = 0; surface: n.grad V = 0, i.e. d_z V - grad h . grad_h V = 0 at z = h (no current into the air);

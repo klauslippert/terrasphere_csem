@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: MIT
 """Laplace-domain route to the time domain (fixed Talbot) for the primary half-space voltage of a coaxial loop pair,
 against the sine-filter route and against empymod (validation: comparison with another code)."""
 import os, sys

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: CC-BY-4.0
 # 201-point Fourier filter, sine and cosine
 # Copyright 2012 Kerry Key.  Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).
 # Source of the coefficients:

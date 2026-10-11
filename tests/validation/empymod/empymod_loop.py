@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: MIT
 """Circular loop in empymod as a 1-D reference.
 
 The loop is a polygon of N straight segments (empymod.bipole, `srcpts` Gauss points per segment) whose circumradius

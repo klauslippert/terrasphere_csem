@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """terrasphere_csem -- semi-analytic frequency- and time-domain EM responses for two 3-D targets with common
 sources, conventions and time transform:
 

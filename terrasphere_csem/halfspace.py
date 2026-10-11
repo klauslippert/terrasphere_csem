@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Closed-form surface fields of horizontal electric dipoles (HED) on a homogeneous half-space, quasi-static, source
 and receiver at the surface (time convention e^{-iwt}).
 

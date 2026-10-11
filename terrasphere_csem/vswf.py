@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Closed-form vector spherical wave functions (for tests and for direct field evaluation near the sphere).
 M_nm = curl(r psi), N_nm = curl(M_nm)/k, psi = z_n(kr) Y_nm, Y_nm = N_nm P_n^m(cos th) e^{im phi}.
 Spherical components (e.g. Bohren & Huffman 1983, eqs. 4.17-4.18, written for e^{im phi}):

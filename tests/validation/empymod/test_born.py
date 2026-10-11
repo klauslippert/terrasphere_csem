@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: MIT
 """First-order null test against empymod.  At null contrast (sigma_s = sigma of its layer) the sphere response
 vanishes identically; its derivative with respect to sigma_s is the Born (Frechet) integral
    dV/dsigma_s = int_sphere E_tx(r) . E_adj(r) dV,

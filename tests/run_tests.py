@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: MIT
 """Runs all test_* functions of all test_*.py files below tests/ without pytest (which may not be installed).
 
 Collected: tests/test_*.py and test_*.py in the subfolders unit/, verification/ and validation/ (recursively);

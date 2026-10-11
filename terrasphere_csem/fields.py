@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Field components from the scalar modes.  For a mode  phi = [Pu + Pd] J_m(lam rho) e^{im phi}  with
 d phi/dz = u (Pd - Pu)   (z UP; Pu is the part travelling up, Pd the part travelling down):
   TE (phi = H_z):  E = -(i w mu/lam^2) z^ x grad_h H_z,   H_h = (1/lam^2) grad_h d_z H_z

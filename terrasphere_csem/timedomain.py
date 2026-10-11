@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Time domain from the frequency domain (shared by sphere and hill).  With V(w) = Re V(w) + i Im V(w) (our e^{-iwt} convention) and the
 direct-current value V(0) (zero for inductive responses, non-zero for the galvanic part of grounded-wire
 responses, including the sphere's galvanic anomaly):

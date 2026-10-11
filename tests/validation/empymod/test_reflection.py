@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: MIT
 """External check of the reflection operator R (sphere -> layers -> sphere) for m = 0 and m = +-1 including the
 TE/TM mixing: a point dipole placed at the sphere centre radiates a pure degree-1 outgoing VSWF; its field
 reflected by the layered earth, re-expanded in regular VSWFs with our R, must equal empymod(layered) -

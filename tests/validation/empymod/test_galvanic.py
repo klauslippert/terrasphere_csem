@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: MIT
 """Galvanic (direct-current carrying) responses of a grounded wire.
 (1) DC limit: E_x of the wire in a homogeneous half-space at w -> 0 equals the analytic field of two point electrodes
     +-I at the wire ends (U = I/(2 pi sigma r)).
