@@ -16,7 +16,7 @@ half_length = 600.0
 spacing = 20.0
 
 [frequencies]
-list = [0.1, 10.0, 1000.0, 100000.0]
+list = [0.1, 10.0, 1000.0]
 
 [output]
 formats = ["npz", "csv"]

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Figure per model (flat / hill / valley): series (lines) against elfe3D (symbols) on the x- and y-profile, all six
-components; real and imaginary part in separate panels, all frequencies in one panel (colour), physical units
-(E in nV/m, H in uA/m, per 1 A; no normalisation).  H with the elfe3D sign.
+"""Figure per model with terrain (hill / valley; the flat model has no elfe3D run): series (lines) against elfe3D
+(symbols) on the x- and y-profile, all six components; real and imaginary part in separate panels, all frequencies
+with an elfe3D run in one panel (colour), physical units (E in nV/m, H in uA/m, per 1 A; no normalisation).
+H with the elfe3D sign.
 elfe3D results: band nf (out) for f < 100 Hz, band hf (<hf-out>, default out; falls back to the nf run) else.
 Usage: python3 plot_profiles_freq.py <folder> [hf-out-dir name]"""
 import os, sys
@@ -23,7 +24,7 @@ def elfe_field(st, H, f, P, hfout):
     # priority: current runs, then earlier ones ('hf' = two-frequency refined run, valid at 100 kHz only;
     # nf/alt_f0.1_1_1000Hz = coarse nf run with 0.1/1/1000 Hz)
     runs = ([('nf', 'out'), ('nf', 'alt_f0.1_1_1000Hz/out')] if f < 100 else
-            [('hf1k', hfout), ('hf100k', hfout), ('hf', 'out'), ('nf', 'out'), ('nf', 'alt_f0.1_1_1000Hz/out')])
+            [('hf1k', hfout), ('hf', 'out'), ('nf', 'out'), ('nf', 'alt_f0.1_1_1000Hz/out')])
     for band, o in runs:
         run = os.path.join(st.folder, 'elfe3d', f'{model_name(H)}_{band}', o)
         if os.path.isfile(os.path.join(run, 'magnetic_fields_receiver_line.txt')) and is_finished(run) and \
@@ -45,11 +46,15 @@ def main():
     prof = d['profile']; pos = {'x': d['px'], 'y': d['py']}
     out = []
     for ih, H in enumerate(d['heights']):
+        if H == 0:                                                     # flat: validated against empymod
+            continue
         fig, ax = plt.subplots(4, 6, figsize=(16, 9.5), sharex=True)
         sources = []
         for jf, f in enumerate(fr):
             el, origin = elfe_field(st, H, f, P, hfout)
-            sources.append(f'{f:g} Hz: {origin or "no elfe3D yet"}')
+            if el is None:                                             # only frequencies with an elfe3D run
+                continue
+            sources.append(f'{f:g} Hz: {origin}')
             for k, c in enumerate(COMPONENTS):
                 sc = 1e9 if k < 3 else 1e6
                 for ip, p in enumerate(['x', 'y']):
@@ -58,8 +63,7 @@ def main():
                         a = ax[2 * ip + ir, k]
                         a.plot(pos[p][sel], sc * fn(ser[ih, jf, k, sel]), '-', color=COLORS[jf], lw=1.1,
                                label=f'{f:g} Hz' if (k == 0 and ip == 0 and ir == 0) else None)
-                        if el is not None:
-                            a.plot(pos[p][sel][::2], sc * fn(el[k, sel][::2]), 'o', ms=2.8, mfc='none', color=COLORS[jf])
+                        a.plot(pos[p][sel][::2], sc * fn(el[k, sel][::2]), 'o', ms=2.8, mfc='none', color=COLORS[jf])
                         a.set_title(f'{part} {c}, {p}-profile', fontsize=8.5)
                         a.tick_params(labelsize=7)
         for a in ax[-1]:
@@ -67,7 +71,7 @@ def main():
         for r in range(4):
             ax[r, 0].set_ylabel('E (nV/m)', fontsize=8); ax[r, 3].set_ylabel(r'H ($\mu$A/m)', fontsize=8)
         ax[0, 0].legend(fontsize=7)
-        lab = 'flat' if H == 0 else (f'hill {H:g} m' if H > 0 else f'valley {-H:g} m')
+        lab = f'hill {H:g} m' if H > 0 else f'valley {-H:g} m'
         fig.suptitle(f'{st.name}, {lab}: series (lines) vs elfe3D (circles, every 2nd receiver); 1 A source\n'
                      + '; '.join(sources), fontsize=9.5)
         fig.tight_layout()

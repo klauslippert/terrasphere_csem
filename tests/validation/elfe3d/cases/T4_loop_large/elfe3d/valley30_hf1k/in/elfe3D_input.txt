@@ -139,8 +139,8 @@ num_PEC                 1
 7500.0 0.0 0.0
 7500.0 0.0 -500.0
 model_file_name         in/model.
-maxRefSteps             6
-maxUnknowns             3000000
+maxRefSteps             0
+maxUnknowns             6000000
 betaRef                 0.6
 accuracyTol             0.00003
 vtk                     0

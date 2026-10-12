@@ -1,7 +1,8 @@
 # Validation against elfe3D
 
 Comparison runs of the 3D finite-element code **elfe3D** for the four validation cases of this package (grounded
-wire in line and broadside, offset loop, large loop; flat, hill and valley; 0.1 Hz, 10 Hz, 1 kHz, 100 kHz).
+wire in line and broadside, offset loop, large loop; hill and valley; 0.1 Hz, 10 Hz, 1 kHz).
+The flat model is validated against empymod and has no elfe3D run here.
 The folder is self-contained for the elfe3D side and can be copied to another machine.
 
 ## elfe3D
@@ -26,16 +27,16 @@ elfe3D, logs packed into `logs.tar.gz`).  A single run:
     cd cases/T1_wire_inline/elfe3d/hill30_hf1k
     ELFE3D=/path/to/elfe3d TETGEN=/path/to/tetgen THREADS=5 ./run.sh
 
-All 36 runs, `NPAR` at the same time with `THREADS` threads each (default: cores / NPAR): set `ELFE3D`, `TETGEN`
+All 16 runs, `NPAR` at the same time with `THREADS` threads each (default: cores / NPAR): set `ELFE3D`, `TETGEN`
 and `NPAR` at the top of `run_all.sh`, then
 
     ./run_all.sh
 
 Finished runs are skipped, so `run_all.sh` can be started again after an interruption; progress in `run_all.log`.
-Restrict with `CASES="T1_wire_inline"`, `BANDS="nf"` or run names as arguments (`./run_all.sh flat_nf`).
+Restrict with `CASES="T1_wire_inline"`, `BANDS="nf"` or run names as arguments (`./run_all.sh hill30_nf`).
 
-Memory: up to about 16 GB per `nf` run and up to about 40 GB per `hf1k`/`hf100k` run (start mesh about 1.4 million
-unknowns, elfe3D stops refining above 3 million; about 13 kB per unknown), e.g. `NPAR=4` on 20 cores / 200 GB.
+Memory: 10-16 GB per `nf` run and 35-63 GB per `hf1k` run (2.4-3.5 million unknowns, about 13-18 kB per unknown),
+e.g. `NPAR=3` for `hf1k` and `NPAR=5` for `nf` on 20 cores / 188 GB.
 Results per run: `out/electric_fields_receiver_line.txt`, `out/magnetic_fields_receiver_line.txt` (frequency, Re/Im of
 the three components per receiver, receivers in the order of `in/elfe3D_input.txt`) and `logs.tar.gz`.
 
@@ -49,23 +50,36 @@ the three components per receiver, receivers in the order of `in/elfe3D_input.tx
 | `T4_loop_large` | square loop 2.6 km x 2.6 km around the hill |
 
 All cases (`cases/<case>/control.toml`): layers 0.01 / 0.005 / 0.03 S/m, interfaces at 200 m and 600 m depth;
-Gaussian terrain of width 150 m at the origin, height 0 (`flat`), +30 m (`hill30`), -30 m (`valley30`); receivers on
+Gaussian terrain of width 150 m at the origin, height +30 m (`hill30`), -30 m (`valley30`); receivers on
 the x- and y-profile from -600 m to 600 m every 20 m, 1 cm below the surface (122 receivers).
 
 | band | frequencies | domain | mesh | per run |
 |---|---|---|---|---|
-| `nf` | 0.1 Hz and 10 Hz | +-15 km | fixed | 10-16 GB, 8-12 min (12 cores) |
-| `hf1k` | 1 kHz | +-15 km | refined by elfe3D, 6 steps, <= 3 million unknowns | up to ~40 GB, 30-60 min (est.) |
-| `hf100k` | 100 kHz | +-15 km | as `hf1k` | as `hf1k` |
+| `nf` | 0.1 Hz and 10 Hz | +-15 km | fixed | 10-16 GB, 20-35 min (4 threads) |
+| `hf1k` | 1 kHz | +-15 km | fixed, finer (about 25 m edges at the source) | 35-63 GB, 1-1.7 h (6-10 threads) |
 
-With mesh refinement elfe3D gives a result for one frequency per run only, hence one band per frequency.
+Maximum tetrahedron volume (m^3) in the boxes of finer mesh around source and receivers (`in/model.poly`):
+
+| band | air medium | air fine | layer 1 medium | layer 1 fine |
+|---|---|---|---|---|
+| `nf` | 300000 | 60000 | 100000 | 4000 |
+| `hf1k` | 50000 | 6000 | 3000 | 1000 |
+
+`hf1k` was first run with a coarser start mesh (300000 / 60000 / 20000 / 6000) and goal-oriented refinement by elfe3D (6 steps, up to 3
+million unknowns); that was not accurate enough, because refinement does not repair a source region that is too
+coarse.  The fixed finer mesh is used instead (`maxRefSteps 0`).  With refinement elfe3D gives a result for one
+frequency per run only, hence a separate band for 1 kHz.
 
 Run folder: `in/elfe3D_input.txt`, `in/regionparameters.txt`, `in/source.txt`, `in/model.poly` (TetGen input: terrain,
 layer interfaces, boxes of finer mesh), `in/model.a.node`.  elfe3D has no command-line arguments; it reads `in/` in the
 directory it is started in and writes `out/`; `run.sh` does exactly that.
 
-Refined runs write one block of rows per refinement step; only the last block holds the result.  Conventions:
+Refined runs write one block of rows per refinement step; only the last block holds the result (here all runs are
+unrefined, one block).  Conventions:
 E_elfe3D = E, H_elfe3D = -H of this package (both e^{-iwt}).  Meshes (`in/model.<n>.*`, 20-30 GB for all runs) are
 not kept.  Comparison with the series: `scripts/compare_elfe3d.py <case folder>`, `scripts/plot_profiles_freq.py
-<case folder>`.  Regenerate the inputs: `python3 scripts/elfe3d_input.py <case folder>` (settings per band in `BANDS`; the inputs here
-were generated with domain 15 km and at most 3 million unknowns for `hf1k` and `hf100k`).
+<case folder>`.  Regenerate the inputs: `python3 scripts/elfe3d_input.py <case folder>` (settings per band in `BANDS`; it
+reproduces the inputs here exactly).
+
+Report `report/report.pdf` (per case and profile: setup and fields of hill and valley, series against elfe3D):
+`python3 scripts/report_elfe3d.py tests/validation/elfe3d`, then compile `report/report.tex` (pdflatex or tectonic).

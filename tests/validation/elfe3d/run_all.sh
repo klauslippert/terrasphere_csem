@@ -1,8 +1,8 @@
 #!/bin/bash
 # Start all runs: every cases/<case>/elfe3d/<model>_<band>/run.sh, NPAR of them at the same time.
 # Settings (block below): ELFE3D, TETGEN (executables), NPAR (runs at the same time, default 4),
-#           THREADS (threads per run, default cores / NPAR), BANDS (default "hf100k hf1k nf": longest first),
-#           CASES (default all).  Arguments (optional): run names, e.g.  ./run_all.sh flat_nf hill30_hf1k
+#           THREADS (threads per run, default cores / NPAR), BANDS (default "hf1k nf": longest first),
+#           CASES (default all).  Arguments (optional): run names, e.g.  ./run_all.sh hill30_nf hill30_hf1k
 # A run is skipped when its logs.tar.gz holds a finished elfe3D log; so the script can be started again.
 # Progress: run_all.log.
 set -u
@@ -17,7 +17,7 @@ export ELFE3D TETGEN
 [ -x "$TETGEN" ] || { echo "TetGen executable not found: $TETGEN (edit TETGEN at the top of run_all.sh)"; exit 1; }
 NCORE=$(nproc)
 export THREADS=${THREADS:-$(( NCORE / NPAR > 0 ? NCORE / NPAR : 1 ))}
-BANDS=${BANDS:-"hf100k hf1k nf"}
+BANDS=${BANDS:-"hf1k nf"}
 CASES=${CASES:-$(cd cases && ls -d */ | tr -d /)}
 ONLY=" $* "
 LOG=$PWD/run_all.log

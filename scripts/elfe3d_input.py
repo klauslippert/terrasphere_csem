@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """elfe3D input of one computation folder: for every height H of <folder>/control.toml and every frequency
 band a run folder <folder>/elfe3d/<model>_<band>/in/ with model.poly (TetGen PLC), model.a.node (extra vertices
-around the receivers), regionparameters.txt, source.txt and elfe3D_input.txt; <model> = flat | hill<H> | valley<H>.
-Bands: 'nf' = frequencies < 100 Hz (domain +-15 km); 'hf1k' (100 Hz..10 kHz) and 'hf100k' (>= 10 kHz): domain
-+-4 km, coarser start mesh refined by elfe3D, one frequency per run.
+around the receivers), regionparameters.txt, source.txt and elfe3D_input.txt; <model> = hill<H> | valley<H>
+(no run for the flat model, H = 0: validated against empymod).
+Bands: 'nf' = frequencies < 100 Hz, 'hf1k' = 100 Hz..10 kHz (one frequency per run, finer mesh); domain +-15 km.
+Frequencies >= 10 kHz get no run.
 Frame z up, receivers on the terrain 1 cm below the surface.
 
 PLC (layered earth, general sources):
@@ -29,13 +30,12 @@ BANDS = {
     # sizes chosen for <= ~1.1 million edges (elfe3D/MUMPS ~ 14 GB per million edges, cap 18 GB)
     'nf': dict(fmax=100.0, D=15000.0, med_z=400.0, ref_steps=0, max_unknowns=3000000,
                maxvol=dict(fine_earth=4000.0, fine_air=60000.0, med_earth=100000.0, med_air=300000.0)),
-    # 1 kHz and 100 kHz: coarser start mesh, goal-oriented refinement by elfe3D up to 1.1 million unknowns.
-    # elfe3D refines inside its frequency loop and stops when the unknowns do not change, so with refinement
-    # only ONE frequency per run gives results: one band per frequency.
-    'hf1k': dict(fmin=100.0, fmax=1e4, D=4000.0, med_z=150.0, ref_steps=6, max_unknowns=1100000, beta_ref=0.6, ref_strategy=0,
-                 maxvol=dict(fine_earth=6000.0, fine_air=60000.0, med_earth=20000.0, med_air=300000.0)),
-    'hf100k': dict(fmin=1e4, D=4000.0, med_z=150.0, ref_steps=6, max_unknowns=1100000, beta_ref=0.6, ref_strategy=0,
-                   maxvol=dict(fine_earth=6000.0, fine_air=60000.0, med_earth=20000.0, med_air=300000.0)),
+    # 1 kHz: fine fixed mesh (about 25 m edges at the source, 2.4-3.5 million unknowns, 35-63 GB).  The earlier coarse
+    # start mesh with goal-oriented refinement by elfe3D was 30 % off at 100 kHz; refinement does not repair a source
+    # region that is too coarse.  With refinement elfe3D gives a result for ONE frequency per run only (it refines
+    # inside its frequency loop), hence one band per frequency.  100 kHz is not computed (> 300 GB with this mesh).
+    'hf1k': dict(fmin=100.0, fmax=1e4, D=15000.0, med_z=150.0, ref_steps=0, max_unknowns=6000000, beta_ref=0.6, ref_strategy=0,
+                 maxvol=dict(fine_earth=1000.0, fine_air=6000.0, med_earth=3000.0, med_air=50000.0)),
 }
 
 
@@ -238,14 +238,14 @@ def model_name(H):
 def main():
     """Write the elfe3D input of all models and bands of the control folder given on the command line."""
     st = Config(sys.argv[1])
-    only = set(sys.argv[2:])                                         # optional: only these run names (e.g. flat_nf)
+    only = set(sys.argv[2:])                                         # optional: only these run names (e.g. hill30_nf)
     for band, b in BANDS.items():
         fr = [f for f in st.freqs if (f < b.get('fmax', np.inf) and f >= b.get('fmin', 0.0))]
         assert band == 'nf' or len(fr) <= 1, 'refinement bands: one frequency per run'
         if not fr:
             continue
         for H in st.heights:
-            if only and f'{model_name(H)}_{band}' not in only:
+            if H == 0 or (only and f'{model_name(H)}_{band}' not in only):
                 continue
             d = os.path.join(st.folder, 'elfe3d', f'{model_name(H)}_{band}', 'in'); os.makedirs(d, exist_ok=True)
             Pl, reg, hfun, source, D = build(st, H, band)

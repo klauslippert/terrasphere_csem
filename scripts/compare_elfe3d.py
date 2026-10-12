@@ -5,8 +5,7 @@ Re/Im of three components per receiver, frequency-major; receivers in the order 
 Conventions (elfe3D appendix of the paper): E_elfe3D = E_ours, H_elfe3D = -H_ours (both e^{-iwt}).
 Measures per model, frequency and component (relative to the profile maximum over both profiles):
   total field   |V_elfe - V_series| / max|V_series|                         (median, 90th percentile)
-  terrain effect (model - flat) of both codes, |dV_elfe - dV_series| / max|dV_series|; size max|dV|/max|V|
-E_z of the flat model is zero in the series (flat surface, earth side) and is skipped there.
+Only models with terrain (hill, valley) have elfe3D runs; the flat model is validated against empymod.
 Writes <folder>/comparison/elfe3d_<out>.txt and .npz.
 Usage: python3 compare_elfe3d.py <folder> [out-dir name, default out]"""
 import os, sys
@@ -48,7 +47,7 @@ def main():
     heights = list(d['heights'])
     elfe = {}                                                          # (model, f) -> (P, 6)
     for H in heights:
-        for band in ('nf', 'hf1k', 'hf100k'):                         # one frequency per refined run
+        for band in ('nf', 'hf1k'):                                   # one frequency per refined run
             run = os.path.join(st.folder, 'elfe3d', f'{model_name(H)}_{band}', outname if band != 'nf' else 'out')
             if not os.path.isfile(os.path.join(run, 'magnetic_fields_receiver_line.txt')) or not is_finished(run):
                 continue
@@ -69,21 +68,10 @@ def main():
             e, s = elfe[(H, fk)], ser[ih, jf]
             row = []
             for k, c in enumerate(COMPONENTS):
-                if H == 0 and c == 'Ez':
-                    row.append('   -  '); continue
                 dev = np.abs(e[:, k] - s[:, k]) / np.abs(s[:, k]).max()
                 tab[('total', H, fk, c)] = (np.median(dev), np.percentile(dev, 90))
                 row.append(f"{100 * np.median(dev):5.2f}/{100 * np.percentile(dev, 90):5.1f}")
             report_lines.append(f"total  {model_name(H):9s} f = {f:8.3g} Hz  " + '  '.join(f'{c} {r}' for c, r in zip(COMPONENTS, row)))
-            if H != 0 and (0.0, fk) in elfe:
-                de = e - elfe[(0.0, fk)]; ds = s - ser[heights.index(0.0), jf]
-                row = []
-                for k, c in enumerate(COMPONENTS):
-                    ref = np.abs(ds[:, k]).max(); size = ref / max(np.abs(s[:, k]).max(), 1e-300)
-                    dev = np.abs(de[:, k] - ds[:, k]) / ref
-                    tab[('effect', H, fk, c)] = (np.median(dev), np.percentile(dev, 90), size)
-                    row.append(f"{100 * np.median(dev):5.1f}/{100 * np.percentile(dev, 90):5.0f} ({100 * size:.1f}%)")
-                report_lines.append(f"effect {model_name(H):9s} f = {f:8.3g} Hz  " + '  '.join(f'{c} {r}' for c, r in zip(COMPONENTS, row)))
     os.makedirs(os.path.join(st.folder, 'comparison'), exist_ok=True)
     open(os.path.join(st.folder, 'comparison', f'elfe3d_{outname}.txt'), 'w').write('\n'.join(report_lines) + '\n')
     np.savez(os.path.join(st.folder, 'comparison', f'elfe3d_{outname}.npz'),
