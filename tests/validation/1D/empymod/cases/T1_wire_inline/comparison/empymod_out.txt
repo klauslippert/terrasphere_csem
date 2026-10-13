@@ -1,0 +1,4 @@
+# T1_wire_inline: series (height 0) vs empymod; |dV| / max|V_empymod| in per cent: median / 90th percentile / max (Ez: max|Ez_empymod| / max|E|)
+f =      0.1 Hz  Ex 2.1e-05/5.3e-05/1.2e-04  Ey 2.8e-13/8.4e-05/9.2e-05  Ez 3.5e-04  Hx 1.4e-13/2.1e-04/2.2e-04  Hy 1.1e-04/3.2e-04/6.6e-04  Hz 1.7e-13/9.2e-07/1.1e-06
+f =       10 Hz  Ex 2.3e-05/5.8e-05/1.2e-04  Ey 2.9e-13/1.1e-04/1.2e-04  Ez 3.6e-04  Hx 1.6e-13/2.3e-04/2.5e-04  Hy 1.2e-04/3.3e-04/7.0e-04  Hz 1.9e-13/5.4e-05/6.3e-05
+f =     1000 Hz  Ex 3.8e-04/1.0e-03/2.3e-03  Ey 2.9e-13/1.7e-03/1.9e-03  Ez 5.3e-04  Hx 2.3e-13/1.6e-03/1.8e-03  Hy 3.0e-04/8.2e-04/1.7e-03  Hz 4.9e-13/1.6e-03/1.8e-03

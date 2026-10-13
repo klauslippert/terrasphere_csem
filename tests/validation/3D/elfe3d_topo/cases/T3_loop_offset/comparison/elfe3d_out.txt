@@ -1,0 +1,13 @@
+# T3_loop_offset: elfe3D (out) vs series (fft); median / 90th percentile in per cent
+total  hill30    f =      0.1 Hz  Ex  0.30/  0.8  Ey  0.26/  0.4  Ez  0.38/  2.6  Hx  1.80/  6.0  Hy  8.73/ 31.7  Hz  0.03/  0.3
+total  valley30  f =      0.1 Hz  Ex  0.33/  0.7  Ey  0.20/  0.3  Ez  0.29/  3.0  Hx  7.00/ 16.4  Hy 19.08/ 53.6  Hz  0.05/  0.3
+total  hill90    f =      0.1 Hz  Ex  0.38/  0.9  Ey  0.20/  0.4  Ez  0.26/  2.0  Hx  1.65/  3.9  Hy  9.86/ 33.7  Hz  0.02/  0.2
+total  valley90  f =      0.1 Hz  Ex  0.58/  1.6  Ey  0.23/  0.5  Ez  0.24/  2.7  Hx  1.65/  5.0  Hy  7.78/ 16.4  Hz  0.02/  0.1
+total  hill30    f =       10 Hz  Ex  0.30/  0.8  Ey  0.20/  0.4  Ez  0.41/  2.5  Hx  0.30/  0.7  Hy  0.50/  0.9  Hz  0.05/  0.2
+total  valley30  f =       10 Hz  Ex  0.27/  0.7  Ey  0.14/  0.2  Ez  0.29/  2.9  Hx  0.54/  1.5  Hy  0.62/  1.6  Hz  0.03/  0.2
+total  hill90    f =       10 Hz  Ex  0.40/  0.9  Ey  0.16/  0.4  Ez  0.27/  1.9  Hx  0.36/  1.1  Hy  0.96/  3.1  Hz  0.06/  0.1
+total  valley90  f =       10 Hz  Ex  0.55/  1.7  Ey  0.17/  0.4  Ez  0.25/  2.6  Hx  0.42/  1.4  Hy  0.61/  1.2  Hz  0.08/  0.1
+total  hill30    f =    1e+03 Hz  Ex  0.47/  1.5  Ey  0.04/  0.5  Ez  1.32/  4.6  Hx  0.10/  0.4  Hy  0.50/  1.4  Hz  0.17/  0.9
+total  valley30  f =    1e+03 Hz  Ex  0.63/  1.9  Ey  0.06/  0.5  Ez  1.83/  5.5  Hx  0.11/  0.4  Hy  0.53/  1.4  Hz  0.17/  0.8
+total  hill90    f =    1e+03 Hz  Ex  0.61/  2.3  Ey  0.05/  0.4  Ez  0.56/  1.9  Hx  0.09/  0.4  Hy  0.30/  1.4  Hz  0.14/  0.9
+total  valley90  f =    1e+03 Hz  Ex  0.82/  2.9  Ey  0.08/  0.5  Ez  0.82/  3.9  Hx  0.10/  0.4  Hy  0.52/  1.6  Hz  0.17/  0.8

@@ -1,0 +1,8 @@
+# T1_wire_inline: elfe3D with sphere (hill90) and reference (hill90ref, same mesh) vs series with / without sphere
+# total: |V_elfe - V_series| / max|V_series|, median/90th percentile (%);  anomaly: max|A_elfe - A_series| / max|A_series| (%) [max|A_series| / max|V_series| (%)]
+total    f =      0.1 Hz  Ex  0.07/  0.7  Ey  0.29/  1.2  Ez  0.52/  1.7  Hx  0.20/  0.5  Hy  0.33/  0.5  Hz  0.16/  1.3
+anomaly  f =      0.1 Hz  Ex   3.6 [ 1.6]  Ey   3.0 [22.7]  Ez   5.7 [ 5.6]  Hx 155.7 [ 0.1]  Hy   7.1 [ 0.4]  Hz   3.9 [ 3.7]
+total    f =       10 Hz  Ex  0.08/  0.7  Ey  0.37/  1.1  Ez  0.51/  1.6  Hx  0.18/  0.5  Hy  0.16/  0.3  Hz  0.39/  1.7
+anomaly  f =       10 Hz  Ex   3.5 [ 1.5]  Ey   2.9 [21.2]  Ez   5.7 [ 5.6]  Hx 154.3 [ 0.1]  Hy   7.7 [ 0.4]  Hz   4.1 [ 3.8]
+total    f =     1000 Hz  Ex  0.24/  0.9  Ey  0.71/  1.7  Ez  0.42/  1.2  Hx  0.59/  1.1  Hy  0.22/  0.6  Hz  1.76/  6.7
+anomaly  f =     1000 Hz  Ex   3.2 [ 0.2]  Ey   6.3 [ 0.2]  Ez   4.0 [ 0.7]  Hx  12.6 [ 0.0]  Hy  10.3 [ 0.0]  Hz   5.4 [ 1.8]

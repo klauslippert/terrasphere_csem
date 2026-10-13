@@ -1,0 +1,4 @@
+# T3_loop_offset: series (height 0) vs empymod; |dV| / max|V_empymod| in per cent: median / 90th percentile / max (Ez: max|Ez_empymod| / max|E|)
+f =      0.1 Hz  Ex 5.7e-10/3.4e-02/3.6e-02  Ey 1.2e-02/4.4e-02/1.2e-01  Ez 3.6e-09  Hx 3.7e-04/2.1e-03/6.9e-03  Hy 1.7e-10/1.5e-03/1.6e-03  Hz 4.4e-07/2.1e-06/6.8e-06
+f =       10 Hz  Ex 6.9e-12/4.5e-04/4.8e-04  Ey 1.4e-04/4.8e-04/1.3e-03  Ez 3.9e-11  Hx 7.8e-05/1.6e-04/2.9e-04  Hy 2.8e-12/1.3e-04/1.4e-04  Hz 6.8e-06/1.1e-05/1.8e-05
+f =     1000 Hz  Ex 1.2e-12/1.5e-03/1.7e-03  Ey 1.7e-04/6.3e-04/1.9e-03  Ez 2.5e-12  Hx 1.6e-04/5.5e-04/1.5e-03  Hy 1.4e-12/1.7e-03/1.8e-03  Hz 7.2e-05/4.6e-04/1.7e-03

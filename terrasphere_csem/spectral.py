@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 """Plane-wave (Sommerfeld/Weyl) spectra of spherical waves and the spherical-wave content of plane waves,
 for all azimuthal orders m.  These four identities are the bridge between the sphere (spherical modes)
-and the layered earth (plane-wave modes).  Every identity is verified numerically in tests/test_spectral.py.
+and the layered earth (plane-wave modes).  Every identity is verified numerically in tests/verification/test_spectral.py.
 
 Notation.  k: wavenumber of the homogeneous layer containing the sphere.  For horizontal wavenumber
 lambda: u = sqrt(lambda^2 - k^2), Re u > 0; an up-going wave has k_z = +i u (e^{i k_z z} = e^{-u z}, z > 0),

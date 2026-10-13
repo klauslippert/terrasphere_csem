@@ -1,2 +1,24 @@
 __pycache__/
 *.pyc
+# logs are not versioned: run logs of all codes (*.log, *.out), the packed elfe3D logs (logs.tar.gz) and the
+# log.txt of the series and empymod runs
+*.log
+*.out
+log.txt
+logs.tar.gz
+# LaTeX: only .tex and .pdf are kept, no intermediate files of the compilation
+*.aux
+*.bbl
+*.blg
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.xdv
+*.nav
+*.snm
+*.vrb
+# series coefficients (intermediate product of run_series.py, reproducible from control.toml); the data are fields.*
+coefficients.npz

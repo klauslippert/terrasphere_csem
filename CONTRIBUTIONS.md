@@ -22,9 +22,9 @@ Where we took them from: the Python library **libdlf** (BSD-3-Clause, <https://g
 ## Software used
 
 - numpy, scipy (BSD-3-Clause): required at run time.
-- empymod (Apache-2.0): used only by the comparison tests in `tests/validation/empymod/` as an independent reference; optional
+- empymod (Apache-2.0): used only by the comparison tests in `tests/verification/empymod/` and the flat-model comparison in `tests/validation/1D/empymod` as an independent reference; optional
   (`pip install .[test]`).
-- elfe3D (Apache-2.0): external finite-element code used for the validation runs in `tests/validation/elfe3d`;
+- elfe3D (Apache-2.0): external finite-element code used for the validation runs in `tests/validation/3D/elfe3d_topo` and `tests/validation/3D/elfe3d_sphere`;
   not distributed here.
 
 ## Published methods

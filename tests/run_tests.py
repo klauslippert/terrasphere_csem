@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Runs all test_* functions of all test_*.py files below tests/ without pytest (which may not be installed).
 
-Collected: tests/test_*.py and test_*.py in the subfolders unit/, verification/ and validation/ (recursively);
-tests/reference/ holds helper modules only.  Arguments select by test-file name (e.g. test_mie) or by folder
-(unit, verification, validation, or a subfolder such as empymod); without arguments everything runs.
-The tests in validation/empymod/ need empymod (pip install .[test])."""
+Collected: test_*.py in the subfolders verification/ and validation/ (recursively); tests/reference/ holds helper
+modules only.  verification/: the building blocks and complete fields against analytic solutions and, in
+verification/empymod/, against empymod.  validation/ holds the case folders of the comparisons with empymod (1D/)
+and elfe3D (3D/), run by their own scripts (see the READMEs there).  Arguments select by test-file name
+(e.g. test_mie) or by folder (verification, validation, or a subfolder such as empymod); without arguments
+everything runs.  The tests in verification/empymod/ need empymod (pip install .[test])."""
 import os, sys, time, importlib.util, traceback
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); sys.path.insert(0, os.path.dirname(HERE))
 

@@ -1,0 +1,8 @@
+# T4_loop_large: elfe3D with sphere (hill90) and reference (hill90ref, same mesh) vs series with / without sphere
+# total: |V_elfe - V_series| / max|V_series|, median/90th percentile (%);  anomaly: max|A_elfe - A_series| / max|A_series| (%) [max|A_series| / max|V_series| (%)]
+total    f =      0.1 Hz  Ex  0.05/  0.6  Ey  0.09/  0.7  Ez zero  Hx  4.21/  9.7  Hy  1.54/ 12.9  Hz  0.75/  0.8
+anomaly  f =      0.1 Hz  Ex 616.7 [ 0.0]  Ey 1419.7 [ 0.0]  Ez zero  Hx   0.8 [ 0.1]  Hy   0.9 [ 0.1]  Hz   1.5 [ 0.0]
+total    f =       10 Hz  Ex  0.08/  0.5  Ey  0.06/  0.6  Ez zero  Hx  0.34/  0.9  Hy  0.16/  1.0  Hz  0.63/  0.7
+anomaly  f =       10 Hz  Ex  18.3 [ 0.0]  Ey  12.3 [ 0.0]  Ez zero  Hx   1.0 [ 0.5]  Hy   1.2 [ 0.5]  Hz   1.2 [ 0.1]
+total    f =     1000 Hz  Ex  0.18/  0.8  Ey  0.20/  0.8  Ez zero  Hx  0.09/  1.0  Hy  0.07/  0.9  Hz  1.23/  2.0
+anomaly  f =     1000 Hz  Ex   3.8 [ 0.1]  Ey   3.5 [ 0.1]  Ez zero  Hx   5.9 [ 0.0]  Hy   6.2 [ 0.0]  Hz   4.4 [ 0.1]

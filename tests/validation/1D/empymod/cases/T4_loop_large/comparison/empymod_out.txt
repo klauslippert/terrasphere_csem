@@ -1,0 +1,4 @@
+# T4_loop_large: series (height 0) vs empymod; |dV| / max|V_empymod| in per cent: median / 90th percentile / max (Ez: max|Ez_empymod| / max|E|)
+f =      0.1 Hz  Ex 1.1e-11/4.1e-02/6.5e-02  Ey 1.8e-11/4.1e-02/6.5e-02  Ez 3.8e-17  Hx 1.2e-11/5.6e-04/1.4e-03  Hy 1.3e-11/5.6e-04/1.4e-03  Hz 7.3e-07/7.6e-07/8.6e-07
+f =       10 Hz  Ex 2.5e-13/5.0e-04/7.7e-04  Ey 2.5e-13/5.0e-04/7.7e-04  Ez 3.9e-19  Hx 2.5e-13/1.3e-04/1.7e-04  Hy 2.7e-13/1.3e-04/1.7e-04  Hz 4.7e-05/4.7e-05/4.7e-05
+f =     1000 Hz  Ex 5.0e-13/1.2e-03/2.0e-03  Ey 4.9e-13/1.2e-03/2.0e-03  Ez 3.6e-20  Hx 3.9e-13/1.1e-03/1.6e-03  Hy 4.0e-13/1.1e-03/1.6e-03  Hz 8.5e-04/1.5e-03/1.9e-03
