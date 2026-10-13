@@ -13,7 +13,7 @@ computed with this package and with the 1-D code **empymod**.
 One folder per case, `cases/<case>/`:
 
 - `control.toml`: input of this package (as `../../3D/elfe3d_topo/cases/<case>/control.toml`, but `heights = [0.0]`);
-  results in `results/` (`scripts/run_series.py`).
+  results in `results/` (`python3 -m terrasphere_csem control.toml`).
 - `empymod/in/empymod_input.toml`: input of empymod (layers, frequencies, sources as finite bipoles, receivers,
   Hankel filter), written by `tests/validation/1D/empymod_input.py <case folder>`; `empymod/run.sh` runs
   `tests/validation/1D/run_empymod.py`, results in `empymod/out/` (`fields.npz`, `fields.csv` in the convention of this package:

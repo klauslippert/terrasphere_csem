@@ -2,7 +2,7 @@
 """Figure per model with terrain (hill / valley; the flat model has no elfe3D run): series (lines) against elfe3D
 (symbols) on the x- and y-profile, all six components; real and imaginary part in separate panels, all frequencies
 with an elfe3D run in one panel (colour), physical units (E in nV/m, H in uA/m, per 1 A; no normalisation).
-H with the elfe3D sign.
+Series exactly as written by this package (results/fields.npz); elfe3D converted to its convention (H = -H_elfe3D).
 elfe3D results: band nf (out) for f < 100 Hz, band hf (<hf-out>, default out; falls back to the nf run) else.
 Usage: python3 plot_profiles_freq.py <folder> [hf-out-dir name]"""
 import os, sys
@@ -13,14 +13,15 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from terrasphere_csem.config import Config
-from compare_elfe3d import read_run, model_name, is_finished
+from compare_elfe3d import read_run, model_name, is_finished, TO_OURS
 
 COMPONENTS = ['Ex', 'Ey', 'Ez', 'Hx', 'Hy', 'Hz']
 COLORS = ['#1f5fa8', '#2a9d5c', '#d9731a', '#8e44ad', '#c0392b']
 
 
 def elfe_field(st, H, f, P, hfout):
-    """elfe3D fields (6, P) of model height H at frequency f from the best available run, and its origin; (None, None) if none."""
+    """elfe3D fields (6, P) of model height H at frequency f from the best available run, in the convention of this
+    package (H = -H_elfe3D), and its origin; (None, None) if none."""
     # priority: current runs, then earlier ones ('hf' = two-frequency refined run, valid at 100 kHz only;
     # nf/alt_f0.1_1_1000Hz = coarse nf run with 0.1/1/1000 Hz)
     runs = ([('nf', 'out'), ('nf', 'alt_f0.1_1_1000Hz/out')] if f < 100 else
@@ -33,7 +34,7 @@ def elfe_field(st, H, f, P, hfout):
             # refined runs: one row per refinement step, only the last one holds the result (others zero)
             ok = [i for i in range(len(fe)) if abs(fe[i] / f - 1) < 1e-6 and np.any(V[i])]
             if ok:
-                return V[ok[-1]].T, f'{band}/{o}'
+                return TO_OURS[:, None] * V[ok[-1]].T, f'{band}/{o}'
     return None, None
 
 
@@ -42,7 +43,7 @@ def main():
     st = Config(sys.argv[1]); hfout = sys.argv[2] if len(sys.argv) > 2 else 'out'
     d = np.load(os.path.join(st.folder, 'results', 'fields.npz'))
     fr = d['freqs']; P = len(d['px'])
-    ser = np.concatenate([d['E'], -d['H']], axis=2)                  # (nh, nf, 6, P), elfe3D convention
+    ser = np.concatenate([d['E'], d['H']], axis=2)                   # (nh, nf, 6, P), as written by terrasphere_csem
     prof = d['profile']; pos = {'x': d['px'], 'y': d['py']}
     out = []
     for ih, H in enumerate(d['heights']):

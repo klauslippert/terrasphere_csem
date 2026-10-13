@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Figure and numbers: sphere below a hill, from the coefficient file written by scripts/coupling.py.
+"""Figure and numbers: sphere below a hill, from the coefficient file written by coupling.py.
 (a) convergence of the coupled series on the summit profiles: max_n |c_n H^n| / max |c_0| for H = 30 and 90 m;
 (b, c) E_x and H_z along the y-profile (x = 0) at 30 Hz: terrain effect without sphere, sphere effect without terrain,
 both together, and the coupling (together minus the sum of the two), relative to the profile maximum of the flat
@@ -8,7 +8,7 @@ Usage: python3 fig_coupling.py <coupling.npz> <output-dir>"""
 import os, sys
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
-sys.path.insert(0, os.path.join(HERE, '..', '..'))
+sys.path.insert(0, os.path.join(HERE, '..'))
 from style import plt, C, save
 from terrasphere_csem.terrain import optimal_sum
 

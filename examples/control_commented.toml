@@ -1,6 +1,6 @@
 # Example control file for terrasphere_csem, all options explained.
 # Units: SI.  Horizontal positions (x, y) on the surface; z points up; depths are positive downwards.
-# One computation = one folder containing this file as control.toml.
+# Run:  python3 -m terrasphere_csem <this file>   (results in results/ next to it).
 
 name = "example_hill_valley_sphere"      # label of the run (default: folder name)
 
@@ -76,6 +76,11 @@ list = [0.1, 1.0, 1000.0, 100000.0]      # Hz
 # ---------------------------------------------------------------- output
 [output]
 formats = ["npz", "csv"]                 # npz and/or csv; each file holds all field components
+# Optionally add "coefficients" (e.g. formats = ["npz", "csv", "coefficients"]) for results/coefficients.npz:
+# the series coefficients c_n of S(H) = sum_n c_n H^n per order, frequency and component (fft: on the whole
+# x- and y-profile grid, plus the coarse runs of the box correction; hankel: at the receivers).  They do not
+# depend on the height H: further heights, other profile points and the convergence per order can be evaluated
+# from them without recomputing.  Not needed for the fields; large (about 13 MB per case with fft, n = 512).
 
 # ---------------------------------------------------------------- numerics (all entries optional, defaults shown)
 [numerics]

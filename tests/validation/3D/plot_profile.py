@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Figure: series (lines) against elfe3D (symbols) on the x- and y-profile of one computation folder, one frequency,
 all six components, models flat / hill / valley; real part solid with circles, imaginary part dashed with squares.
-elfe3D convention e^{-iwt}; our H is shown with the elfe3D sign (H_elfe3D = -H_ours) so that both lie on top.
+Series exactly as written by this package (results/fields.npz); elfe3D converted to its convention (H = -H_elfe3D).
 Usage: python3 plot_profile.py <folder> <f in Hz> [out-dir name for the hf band, default out]"""
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -11,7 +11,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from terrasphere_csem.config import Config
-from compare_elfe3d import read_run, model_name
+from compare_elfe3d import read_run, model_name, TO_OURS
 
 COMPONENTS = ['Ex', 'Ey', 'Ez', 'Hx', 'Hy', 'Hz']
 COLOR = {0.0: '0.45', 30.0: '#1f5fa8', -30.0: '#d9731a'}
@@ -22,7 +22,7 @@ def main():
     st = Config(sys.argv[1]); f = float(sys.argv[2]); outname = sys.argv[3] if len(sys.argv) > 3 else 'out'
     d = np.load(os.path.join(st.folder, 'results', 'fields.npz'))
     fr = d['freqs']; jf = int(np.argmin(np.abs(fr - f))); P = len(d['px'])
-    ser = np.concatenate([d['E'], -d['H']], axis=2)[:, jf]          # (nh, 6, P), elfe3D convention
+    ser = np.concatenate([d['E'], d['H']], axis=2)[:, jf]           # (nh, 6, P), as written by terrasphere_csem
     prof = d['profile']; px, py = d['px'], d['py']
     band = 'nf' if f < 100 else 'hf'
     fig, ax = plt.subplots(2, 6, figsize=(15, 5.6), sharex=True)
@@ -32,7 +32,7 @@ def main():
         if os.path.isfile(os.path.join(run, 'magnetic_fields_receiver_line.txt')):
             fe, V = read_run(run, P); i = int(np.argmin(np.abs(fe - f)))
             if abs(fe[i] / f - 1) < 1e-6:
-                el = V[i].T                                            # (6, P)
+                el = TO_OURS[:, None] * V[i].T                         # (6, P), convention of this package
         for row, (p, pos) in enumerate([('x', px), ('y', py)]):
             sel = prof == p
             for k, c in enumerate(COMPONENTS):

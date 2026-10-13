@@ -30,8 +30,11 @@ cancelled.  Memory: about 15-18 GB per `nf` run and 55-75 GB per `hf1k` run (1.6
 
 ## Series and comparison
 
-`cases/<case>/results/` holds the series with the sphere (`control.toml`, heights [90]); the series without the
-sphere is taken from `../elfe3d_topo/cases/<case>/results/`.  Comparison and report:
+`cases/<case>/results/` holds the series with the sphere (`control.toml`, heights [90]), from the repository root:
+
+    python3 -m terrasphere_csem tests/validation/3D/elfe3d_sphere/cases/<case>/control.toml      # about 3 h per case, 7-13 GB
+
+The series without the sphere is taken from `../elfe3d_topo/cases/<case>/results/`.  Comparison and report:
 
     python3 tests/validation/3D/report_elfe3d_sphere.py tests/validation/3D/elfe3d_sphere
     (cd tests/validation/3D/elfe3d_sphere/report && tectonic report.tex)

@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""Series computation of one computation folder.  Reads <folder>/control.toml, writes <folder>/results/:
+"""Main program of the package (series computation): reads a control file, writes <folder of the control file>/results/:
   log.txt      control file, grids, timing, convergence, box correction
-  coefficients.npz  series coefficients on the summit profiles (always; basis of every other output)
-  frequency domain ([frequencies]):  fields.npz / fields.csv  (as chosen in [output] formats)
+  coefficients.npz  only if [output] formats contains "coefficients": the series coefficients from which the
+      fields are assembled, S(H) = sum_n c_n H^n.  The c_n do not depend on the height H, so further heights (and,
+      method fft, other points of the profiles) can be evaluated from them without recomputing, and the size of
+      each order shows the convergence.  Contents: freqs, method; fft: C (nf, nord + 1, 6, 2, N) = c_n of E and H
+      (x, y, z) on the x- and y-profile at the grid points x (N), and the coarse runs of the box correction
+      C_box<N>, x_box<N>; hankel: C_receivers (nf, nord + 1, 6, P) at the receivers.  Not needed for the fields.
+  frequency domain ([frequencies]):  fields.npz / fields.csv  (as chosen in [output] formats: npz, csv)
       E, H (nh, nf, 3, P) complex, e^{-iwt}, components (x, y, z), z up, fields on the terrain (earth side);
       px, py, pz, profile, error (nh, nf) estimated truncation error relative to the largest flat E resp. H
   time domain ([time], signal off|on):  transients.npz / transients.csv
@@ -12,10 +17,10 @@ S(H) - c_0 of the series, (i) box-corrected for f <= box_fmax by [Richardson(L_b
 (20 m grid, boxes 5.12/10.24/20.48 km, 12 orders; box error ~ L^-2), (ii) in the time domain
 continued as a constant above f_c, the last frequency (from 1 Hz up) whose estimated truncation error is below
 `tolerance` of the largest terrain effect.
-Usage: python3 run_series.py <folder>"""
+Usage: python3 -m terrasphere_csem <control file>      (or <folder>, then <folder>/control.toml)"""
 import sys, os, time
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(HERE))
+sys.path.insert(0, os.path.dirname(HERE))          # also as a plain script: python3 terrasphere_csem/__main__.py
 import numpy as np
 from terrasphere_csem import terrain, halfspace, timedomain, MU0
 from terrasphere_csem.config import Config
@@ -138,7 +143,7 @@ def write_fields(st, results, fr, Cr, dV, est, header, prof, log):
                     for k in range(P):
                         fh.write(f"{H:g},{f:g},{prof[k]},{px[k]:g},{py[k]:g},{pz[ih, k]:.6g}," +
                                  ','.join(f"{a.real:.10e},{a.imag:.10e}" for a in F[ih, i, :, k]) + '\n')
-    log(f"written: {results}: coefficients.npz, " + ', '.join(f'fields.{f}' for f in st.formats))
+    log(f"written: {results}: " + ', '.join(f'fields.{f}' for f in st.formats if f != 'coefficients'))
 
 
 def write_transients(st, results, fr, Cr, dV, est, header, prof, px, py, log):
@@ -186,11 +191,11 @@ def write_transients(st, results, fr, Cr, dV, est, header, prof, px, py, log):
                         v = list(out['E'][ih, it, :, k]) + list(out['dBdt'][ih, it, :, k]) + list(out['B'][ih, it, :, k])
                         fh.write(f"{H:g},{tt:.6e},{prof[k]},{px[k]:g},{py[k]:g},{pz[ih, k]:.6g}," +
                                  ','.join(f"{a:.10e}" for a in v) + '\n')
-    log(f"written: {results}: coefficients.npz, " + ', '.join(f'transients.{f}' for f in st.formats))
+    log(f"written: {results}: " + ', '.join(f'transients.{f}' for f in st.formats if f != 'coefficients'))
 
 
 def main():
-    """Run the series computation of the control folder given on the command line (see the module docstring)."""
+    """Run the series computation of the control file given on the command line (see the module docstring)."""
     st = Config(sys.argv[1])
     results = os.path.join(st.folder, 'results'); os.makedirs(results, exist_ok=True)
     logfile = open(os.path.join(results, 'log.txt'), 'w')
@@ -199,7 +204,7 @@ def main():
         """Print a line and append it to the log file."""
         print(s, flush=True); logfile.write(s + '\n'); logfile.flush()
     log(f"# {st.name}  {time.strftime('%Y-%m-%d %H:%M:%S')} (server time, UTC)")
-    log(open(os.path.join(st.folder, 'control.toml')).read())
+    log(open(st.file).read())
     nu = st.numerics
     px, py, prof = st.receivers()
     fr = st.freqs if st.domain == 'frequency' else st.freqs[st.freqs <= float(nu['fmax_series'])]
@@ -212,7 +217,9 @@ def main():
         Cr = at_receivers(C, x, px, py, prof)                     # (nf, nord+1, 6, P)
     dV, est = terrain_effect(st, Cr, log)
     apply_box_correction(st, fr, dV, res, (px, py, prof), log)
-    np.savez_compressed(os.path.join(results, 'coefficients.npz'), **res)
+    if 'coefficients' in st.formats:                               # only on request (see the module docstring)
+        np.savez_compressed(os.path.join(results, 'coefficients.npz'), **res)
+        log(f"written: {results}: coefficients.npz")
     pz = np.array([[st.height(a, b, H) for a, b in zip(px, py)] for H in st.heights])
     header = dict(heights=np.array(st.heights), px=px, py=py, pz=pz, profile=np.array(prof))
     if st.domain == 'frequency':

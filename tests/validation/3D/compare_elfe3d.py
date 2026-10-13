@@ -15,6 +15,7 @@ import numpy as np
 from terrasphere_csem.config import Config
 
 COMPONENTS = ['Ex', 'Ey', 'Ez', 'Hx', 'Hy', 'Hz']
+TO_OURS = np.array([1.0, 1.0, 1.0, -1.0, -1.0, -1.0])      # elfe3D -> this package: E unchanged, H = -H_elfe3D
 
 
 def model_name(H):

@@ -2,7 +2,8 @@
 """LaTeX report of the elfe3D validation: one section per case and profile (x, y), one subsection (page) per model
 with terrain (hill, valley; the flat model is validated against empymod elsewhere): setup figure (plan view and
 xz-section through y = 0 with source, profile, terrain and layers), then the fields on that profile: Re/Im of E and H,
-all three components, series (lines) against elfe3D (circles), all frequencies with an elfe3D run.  Physical units (E in nV/m, H in uA/m, per 1 A), H with the elfe3D sign.
+all three components, series (lines) against elfe3D (circles), all frequencies with an elfe3D run.  Physical units (E in nV/m, H in uA/m, per 1 A); series exactly as written by this package, elfe3D converted to its
+convention (H = -H_elfe3D).
 Writes <validation folder>/report/{report.tex, fig/*.pdf}, or report_<H>m/ when only the heights +-H are wanted.
 Usage: python3 report_elfe3d.py <validation folder (with cases/)> [H]"""
 import os, sys
@@ -26,7 +27,7 @@ def main():
     for c in cases:
         st = Config(os.path.join(root, 'cases', c))
         d = np.load(os.path.join(st.folder, 'results', 'fields.npz'))
-        ser = np.concatenate([d['E'], -d['H']], axis=2)               # (nh, nf, 6, P), elfe3D convention
+        ser = np.concatenate([d['E'], d['H']], axis=2)                # (nh, nf, 6, P), as written by terrasphere_csem
         P = len(d['px'])
         desc = open(os.path.join(st.folder, 'control.toml')).readline().lstrip('# ').strip()
         for prof in d['profile'][np.sort(np.unique(d['profile'], return_index=True)[1])]:
@@ -64,7 +65,7 @@ Gaussian hills and valleys (height """ + ' m and '.join(r'$\pm%g$' % h for h in 
 empymod.  Three layers with
 interfaces at 200 m and 600 m depth.  Receivers 1 cm below the surface on the x- and y-profile from $-600$ m to
 600 m every 20 m.  Fields per 1 A source current, E in nV/m, H in $\mu$A/m, time dependence $e^{-i\omega t}$,
-H with the sign convention of elfe3D ($H_\mathrm{elfe3D} = -H$).
+in the convention of this package: the series exactly as it writes them, elfe3D converted ($H = -H_\mathrm{elfe3D}$).
 \tableofcontents
 \clearpage
 """ + '\n'.join(body) + r"""

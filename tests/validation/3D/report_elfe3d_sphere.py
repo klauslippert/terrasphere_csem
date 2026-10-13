@@ -7,14 +7,14 @@ elfe3d_input.py --reference) against the series with the sphere (<case>/results)
   anomaly      A = V(sphere) - V(no sphere); elfe3D: sphere run - reference run (the mesh error largely cancels)
                max|A_elfe - A_series| / max|A_series| and the size of the anomaly max|A_series| / max|V_series|
 Writes <folder>/cases/<case>/comparison/elfe3d_sphere.txt and the report <folder>/report/{report.tex, fig/*.pdf}
-(setup, total field and anomaly per case and profile; E in nV/m, H in uA/m, elfe3D sign convention H = -H_ours).
+(setup, total field and anomaly per case and profile; E in nV/m, H in uA/m; series exactly as written by this package, elfe3D converted to its convention, H = -H_elfe3D).
 Usage: python3 report_elfe3d_sphere.py <folder (with cases/)> [<elfe3d folder without sphere>, default ../elfe3d_topo]"""
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.abspath(os.path.join(HERE, '..', '..', '..')), os.path.dirname(HERE), HERE]   # package, plotting.py, this folder
 import numpy as np
 from terrasphere_csem.config import Config
-from compare_elfe3d import model_name, is_finished, read_run, COMPONENTS
+from compare_elfe3d import model_name, is_finished, read_run, COMPONENTS, TO_OURS
 from plotting import setup_figure, profile_figure, tex_escape
 
 MIN_ANOMALY = 0.01          # anomalies below 1 % of max|V| are listed but not rated
@@ -22,14 +22,15 @@ ZERO = 1e-6                 # a component below 1e-6 of the largest E (H) compon
 
 
 def elfe_run(st, name, f, P):
-    """elfe3D fields (6, P) of run <name>_<band> at frequency f (nf below 100 Hz, else hf1k), or None."""
+    """elfe3D fields (6, P) of run <name>_<band> at frequency f (nf below 100 Hz, else hf1k) in the convention of this
+    package (H = -H_elfe3D), or None."""
     run = os.path.join(st.folder, 'elfe3d', f'{name}_{"nf" if f < 100 else "hf1k"}', 'out')
     fn = os.path.join(run, 'magnetic_fields_receiver_line.txt')
     if not (os.path.isfile(fn) and os.path.getsize(fn) > 0 and is_finished(run)):
         return None
     fe, V = read_run(run, P)
     ok = [i for i in range(len(fe)) if abs(fe[i] / f - 1) < 1e-6 and np.any(V[i])]
-    return V[ok[-1]].T if ok else None
+    return TO_OURS[:, None] * V[ok[-1]].T if ok else None
 
 
 def main():
@@ -47,8 +48,8 @@ def main():
         H = float(d['heights'][0]); jb = list(b['heights']).index(H)
         assert len(d['heights']) == 1 and np.allclose(d['freqs'], b['freqs']) and np.allclose(d['px'], b['px'])
         P, fr, m = len(d['px']), d['freqs'], model_name(H)
-        ser = np.concatenate([d['E'], -d['H']], axis=2)                 # (1, nf, 6, P), elfe3D convention
-        ser0 = np.concatenate([b['E'][jb:jb + 1], -b['H'][jb:jb + 1]], axis=2)
+        ser = np.concatenate([d['E'], d['H']], axis=2)                  # (1, nf, 6, P), as written by terrasphere_csem
+        ser0 = np.concatenate([b['E'][jb:jb + 1], b['H'][jb:jb + 1]], axis=2)
         ans = ser - ser0                                                # series anomaly
         el = {f: (elfe_run(st, m, f, P), elfe_run(st, m + 'ref', f, P)) for f in fr}
         lines = [f'# {c}: elfe3D with sphere ({m}) and reference ({m}ref, same mesh) vs series with / without sphere',
@@ -127,8 +128,8 @@ For each source two figures: the total field with the sphere, and the anomaly of
 the difference of the run with the sphere and a run on the identical mesh with the host resistivity in the sphere, so
 that the discretisation error of the background largely cancels; the series anomaly is the series with the sphere
 minus the series without it.  Receivers 1 cm below the surface on the x- and y-profile from $-600$ m to 600 m every
-20 m.  Fields per 1 A source current, E in nV/m, H in $\mu$A/m with the sign convention of elfe3D
-($H_\mathrm{elfe3D} = -H$), time dependence $e^{-i\omega t}$.
+20 m.  Fields per 1 A source current, E in nV/m, H in $\mu$A/m, time dependence $e^{-i\omega t}$, in the
+convention of this package: the series exactly as it writes them, elfe3D converted ($H = -H_\mathrm{elfe3D}$).
 \tableofcontents
 \clearpage
 """ % (H, 1 / float(sp['conductivity']), float(sp['radius']), *(float(v) for v in sp['center'])) + \

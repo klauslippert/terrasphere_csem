@@ -29,7 +29,8 @@ Control file (TOML, SI units; z up, positions on the surface (x, y); depth posit
     # [time]                       # ... or a time window (frequencies follow from the filter, lagged grid)
     # tmin = 1e-5; tmax = 10.0; signal = "off"      # off = switch-off step, on = switch-on step
     [output]
-    formats = ["npz", "csv"]       # any of npz, csv; each file holds all components
+    formats = ["npz", "csv"]       # npz and/or csv (each file holds all components); add "coefficients" for
+                                   # results/coefficients.npz (series coefficients, see __main__.py)
     [numerics]                     # defaults in NUMERICS
     method = "hankel"              # hankel (default, no periodic box) | fft (2-D FFT, box correction)
     m_max = 40; n_phi = 128; npan_r = 32; npan_l = 32; lam_max = 0.25     # hankel
@@ -55,12 +56,15 @@ class Config:
     frequencies or time window, output and numerical settings; see the module docstring).
 
     The objects needed by the series computation (sources, grids, sphere coupling) are built on demand."""
-    def __init__(self, folder):
-        """Read and check `<folder>/control.toml`.
+    def __init__(self, path):
+        """Read and check the control file `path`, or `<path>/control.toml` if `path` is a folder.  `folder` is the
+        folder of the control file (the outputs go to `<folder>/results/`), `file` the control file itself.
 
         Raises ValueError unless exactly one of the blocks [frequencies] and [time] is present."""
-        self.folder = os.path.abspath(folder)
-        with open(os.path.join(self.folder, 'control.toml'), 'rb') as fh:
+        path = os.path.abspath(path)
+        self.file = path if os.path.isfile(path) else os.path.join(path, 'control.toml')
+        self.folder = os.path.dirname(self.file)
+        with open(self.file, 'rb') as fh:
             self.d = tomllib.load(fh)
         d = self.d
         self.name = d.get('name', os.path.basename(self.folder))
@@ -85,7 +89,8 @@ class Config:
             self.freqs = filter_frequencies(self.t)                   # all filter abscissae (the series up to fmax)
         a = d.get('output', {})
         self.formats = [f.lower() for f in a.get('formats', ['npz'])]
-        assert set(self.formats) <= {'npz', 'csv'} and self.formats, "output.formats: npz and/or csv"
+        assert set(self.formats) <= {'npz', 'csv', 'coefficients'} and set(self.formats) & {'npz', 'csv'}, \
+            "output.formats: npz and/or csv, optionally coefficients"
         e = d['receivers']
         self.profiles = list(e.get('profiles', ['x', 'y']))
         self.half_length = float(e.get('half_length', 600.0)); self.spacing = float(e.get('spacing', 20.0))

@@ -40,6 +40,12 @@ e.g. `NPAR=3` for `hf1k` and `NPAR=5` for `nf` on 20 cores / 188 GB.
 Results per run: `out/electric_fields_receiver_line.txt`, `out/magnetic_fields_receiver_line.txt` (frequency, Re/Im of
 the three components per receiver, receivers in the order of `in/elfe3D_input.txt`) and `logs.tar.gz`.
 
+Series of this package (all heights of a case in one run, a few minutes per case), from the repository root:
+
+    python3 -m terrasphere_csem tests/validation/3D/elfe3d_topo/cases/<case>/control.toml
+
+giving `cases/<case>/results/` (`fields.npz`, `fields.csv`, `log.txt`).
+
 ## Details
 
 | case | source (1 A) |
