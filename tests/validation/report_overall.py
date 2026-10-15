@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Overall validation report: cover page, table of contents and the references of the codes compared with (empymod;
-elfe3D with TetGen and MUMPS), followed by the three reports as they are: 1D/empymod/report/report.pdf (flat model
-against empymod), 3D/elfe3d_topo/report/report.pdf (topography against elfe3D), 3D/elfe3d_sphere/report/report.pdf
-(sphere under the hill against elfe3D); build them first.
+elfe3D with TetGen and MUMPS), followed by the four reports as they are: 1D/empymod/report/report.pdf (flat model
+against empymod), 1D/empymod_time/report/report.pdf (the same in the time domain), 3D/elfe3d_topo/report/report.pdf
+(topography against elfe3D), 3D/elfe3d_sphere/report/report.pdf (sphere under the hill against elfe3D); build them
+first.
 Writes report/report.tex next to this script; compile it there (tectonic or pdflatex, needs pdfpages).
 Usage: python3 report_overall.py"""
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPORTS = [('Flat model against empymod (1-D)', '1D/empymod'),
+           ('Flat model against empymod in the time domain (1-D)', '1D/empymod_time'),
            ('Topography against elfe3D', '3D/elfe3d_topo'),
            ('Sphere under the hill against elfe3D', '3D/elfe3d_sphere')]
 
@@ -24,14 +26,16 @@ Validation of the series solution of this package against two independent codes:
 model, and the 3-D finite-element code elfe3D for Gaussian topography (hills and valleys of $\pm30$ m and $\pm90$ m,
 width 150 m) and for a conductive sphere under the 90 m hill.  Four sources (grounded wire in line and broadside,
 offset loop, large loop around the hill), three layers with interfaces at 200 m and 600 m depth, receivers on the
-x- and y-profile from $-600$ m to 600 m every 20 m, frequencies 0.1 Hz, 10 Hz and 1 kHz.  The three reports follow
-in full; each ends with its table of deviations.
+x- and y-profile from $-600$ m to 600 m every 20 m, frequencies 0.1 Hz, 10 Hz and 1 kHz; the flat model also in
+the time domain (switch-off, 10\,$\mu$s to 10 s, every 300 m).  The four reports follow in full; each ends with its
+table of deviations.
 
 \tableofcontents
 
 \section*{References}
 \addcontentsline{toc}{section}{References}
-\paragraph{empymod} (flat model; version 2.6.0, quasi-static, digital filter key\_201\_2009)
+\paragraph{empymod} (flat model; version 2.6.0, quasi-static, digital filter key\_201\_2009; time domain: Fourier
+filter key\_601\_2009)
 \begin{itemize}
 \item Werthm\"uller, D. (2017). An open-source full 3D electromagnetic modeler for 1D VTI media in Python: empymod.
   \emph{Geophysics}, 82(6), WB9--WB19. \href{https://doi.org/10.1190/geo2016-0626.1}{doi:10.1190/geo2016-0626.1}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Figure: model.  Plan view (sources: wire, grounded dipole, loop around the hill; terrain contours; sphere outline;
+"""Figure model: model.  Plan view (sources: wire, grounded dipole, loop around the hill; terrain contours; sphere outline;
 receiver profiles) and cross-section y = 0 (hill and valley, layer interface, sphere).
 Usage: python3 fig_model.py <output-dir>"""
 import os, sys

@@ -22,3 +22,5 @@ logs.tar.gz
 *.vrb
 # series coefficients (intermediate product of run_series.py, reproducible from control.toml); the data are fields.*
 coefficients.npz
+# empymod time-domain runs: one file per job, merged into out/transients.*; kept locally so that a run can resume
+tests/validation/1D/empymod_time/cases/*/empymod/out/parts/

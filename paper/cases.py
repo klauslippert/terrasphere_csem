@@ -1,5 +1,6 @@
-"""Named model cases of the paper scripts (coupling.py, fig_coupling.py).  Gaussian hill of width s = 150 m centred
+"""Named model cases of the paper scripts (coupling.py, fig_coupling.py, the terrain figures).  Gaussian hill of width s = 150 m centred
 at the origin, receivers on the two profiles through the summit (x- and y-axis), top layer 0.01 S/m.
+  'wire_halfspace' grounded wire (-500, -1500) .. (500, -1500) m, 1 A, over the half-space 0.01 S/m
   'wire_layered'   grounded wire (-500, -1500) .. (500, -1500) m, 1 A, over two layers: 0.01 S/m to 300 m, 0.003 S/m below
   'wire_sphere'    as 'wire_layered' plus a sphere (radius 60 m, 1 S/m) centred 140 m below the summit
 """
@@ -13,6 +14,7 @@ _WIRE = lambda: grounded_wire((-500.0, -1500.0), (500.0, -1500.0), 1.0, n_gauss=
 _TWO = lambda: LayerStack([0.0, 300.0], [SIGMA, 0.003])
 
 CASES = {
+    'wire_halfspace': dict(sources=_WIRE, ground=lambda: SIGMA),
     'wire_layered': dict(sources=_WIRE, ground=_TWO),
     'wire_sphere': dict(sources=_WIRE, ground=_TWO, sphere=dict(b=60.0, sigma_s=1.0, mu_r=1.0,
                                                                  center=(0.0, 0.0, 140.0), nmax=10)),

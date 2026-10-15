@@ -2,7 +2,7 @@
 """LaTeX report of the flat-model comparison with empymod: one section per case and profile (x, y) with the setup
 figure (plan view and xz-section through y = 0) and the fields on that profile (Re/Im of E and H, all three
 components, series (lines) against empymod (circles), all frequencies), then a table of the deviations
-(compare_empymod.py).  Physical units (E in nV/m, H in uA/m, per 1 A), H with the sign of this package.
+(compare_empymod.py).  Physical units (E in mV/m, H in uA/m, per 1 A), H with the sign of this package.
 Writes <validation folder>/report/{report.tex, fig/*.pdf}.
 Usage: python3 report_empymod.py <validation folder (with cases/)>"""
 import os, sys
@@ -65,9 +65,9 @@ Series solution of this package for the flat model (lines) against the 1-D code 
 sources of the elfe3D comparison.  Three layers with interfaces at 200 m and 600 m depth.  Receivers on the x- and
 y-profile from $-600$ m to 600 m every 20 m: series on the surface (earth side), empymod sources and receivers 1 mm
 below it.  empymod quasi-static (no displacement currents), digital filter key\_201\_2009, finite bipoles (40 Gauss
-points each; a loop as its four sides).  Fields per 1 A source current, E in nV/m, H in $\mu$A/m, time dependence
+points each; a loop as its four sides).  Fields per 1 A source current, E in mV/m, H in $\mu$A/m, time dependence
 $e^{-i\omega t}$.  Components that vanish on a profile by symmetry are plotted as they come out (noise
-below $10^{-10}$ of the field maximum in both codes; note the axis offsets).
+below $10^{-10}$ of the field maximum in both codes; a power of ten of an axis is part of its label).
 \tableofcontents
 \clearpage
 """ + '\n'.join(body) + table + r"""

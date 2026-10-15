@@ -1,0 +1,7 @@
+# T1_wire_inline: series (height 0) vs empymod, time domain 9.19e-06..10 s; curve: max_t |dV| / max_t |V_empymod| per receiver (median / max over receivers); pointwise: max |dV| / |V_empymod| where |V_empymod| > 1e-06 of its maximum (max over receivers); n: receivers compared; zero: level of the receivers where the component vanishes by symmetry (< 1e-06 of the largest E resp. dB/dt)
+component    n  curve med  curve max  pointwise     zero   curve max per decade: 1e-6s 1e-5s 1e-4s 1e-3s 1e-2s 1e-1s 1e0s 1e1s
+Ex          10    2.3e-08    3.9e-08    8.1e-08        -   3.9e-08 3.6e-08 1.1e-08 4.0e-09 3.0e-10 2.3e-11 5.2e-13 3.3e-13
+Ey           4    2.4e-07    2.7e-07    1.5e-06    0e+00   2.7e-07 2.5e-07 7.5e-08 2.3e-08 3.1e-10 2.7e-12 2.5e-13 1.2e-13
+dBx/dt       4    3.5e-10    3.5e-10    6.0e-09    0e+00   3.5e-10 3.2e-10 1.9e-10 1.8e-10 5.9e-12 2.9e-14 2.2e-15 7.2e-16
+dBy/dt      10    5.2e-10    1.3e-09    7.3e-09        -   1.3e-09 9.0e-10 4.1e-10 2.7e-10 9.2e-12 1.3e-13 3.0e-15 6.7e-16
+dBz/dt       4    3.3e-08    3.3e-08    4.1e-08    0e+00   3.3e-08 3.1e-08 8.9e-09 1.4e-09 1.3e-10 1.6e-12 3.1e-15 6.5e-17

@@ -17,6 +17,7 @@ S(H) - c_0 of the series, (i) box-corrected for f <= box_fmax by [Richardson(L_b
 (20 m grid, boxes 5.12/10.24/20.48 km, 12 orders; box error ~ L^-2), (ii) in the time domain
 continued as a constant above f_c, the last frequency (from 1 Hz up) whose estimated truncation error is below
 `tolerance` of the largest terrain effect.
+If all heights are 0, the terrain series is skipped: the fields are the flat field alone (no coefficients.npz).
 Usage: python3 -m terrasphere_csem <control file>      (or <folder>, then <folder>/control.toml)"""
 import sys, os, time
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -177,7 +178,7 @@ def write_transients(st, results, fr, Cr, dV, est, header, prof, px, py, log):
         out['E'][ih] = timedomain.transient(t, fa, V[:, :3], kind=st.signal)
         out['B'][ih] = timedomain.transient(t, fa, MU0 * V[:, 3:], kind=st.signal)
         out['dBdt'][ih] = -sgn * timedomain.transient(t, fa, MU0 * V[:, 3:], kind='imp')
-        log(f"  H = {H:+.0f} m: series used up to f_c = {fr[ic]:.3g} Hz, constant above")
+        log(f"  H = {H:+.0f} m: " + ("flat field" if H == 0 else f"series used up to f_c = {fr[ic]:.3g} Hz, constant above"))
     if 'npz' in st.formats:
         np.savez_compressed(os.path.join(results, 'transients.npz'), t=t, signal=st.signal, f_c=np.array(fcs),
                             units='E V/m, dBdt T/s, B T; 1 A step', **out, **header)
@@ -208,16 +209,27 @@ def main():
     nu = st.numerics
     px, py, prof = st.receivers()
     fr = st.freqs if st.domain == 'frequency' else st.freqs[st.freqs <= float(nu['fmax_series'])]
-    if nu['method'] == 'hankel':
+    res = None
+    if all(H == 0 for H in st.heights):                            # flat surface: no terrain series needed
+        log("  all heights 0: flat field only (closed form + layer correction, sphere if present), no terrain series")
+        if st.domain == 'frequency':
+            Cr = flat_field(st, fr, px, py)[:, None]                # (nf, 1, 6, P)
+        else:                                                      # write_transients takes the flat field itself
+            Cr = np.zeros((len(fr), 1, 6, len(px)), complex)
+        dV = np.zeros((len(st.heights),) + Cr[:, 0].shape, complex); est = np.zeros((len(st.heights), len(fr)))
+    elif nu['method'] == 'hankel':
         Cr = coeff_hankel(st, fr, log)                              # (nf, nord+1, 6, P), no periodic box
         res = dict(freqs=fr, C_receivers=Cr, method='hankel')
     else:
         C, x = coeff_fft(st, fr, int(nu['n']), float(nu['dx']), float(nu['lowpass']), int(nu['orders']), log)
         res = dict(freqs=fr, x=x, C=C, method='fft')
         Cr = at_receivers(C, x, px, py, prof)                     # (nf, nord+1, 6, P)
-    dV, est = terrain_effect(st, Cr, log)
-    apply_box_correction(st, fr, dV, res, (px, py, prof), log)
-    if 'coefficients' in st.formats:                               # only on request (see the module docstring)
+    if res is not None:
+        dV, est = terrain_effect(st, Cr, log)
+        apply_box_correction(st, fr, dV, res, (px, py, prof), log)
+    if 'coefficients' in st.formats and res is None:
+        log("  coefficients.npz not written: no terrain series (all heights 0)")
+    elif 'coefficients' in st.formats:                             # only on request (see the module docstring)
         np.savez_compressed(os.path.join(results, 'coefficients.npz'), **res)
         log(f"written: {results}: coefficients.npz")
     pz = np.array([[st.height(a, b, H) for a, b in zip(px, py)] for H in st.heights])

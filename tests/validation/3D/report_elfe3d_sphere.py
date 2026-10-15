@@ -7,7 +7,7 @@ elfe3d_input.py --reference) against the series with the sphere (<case>/results)
   anomaly      A = V(sphere) - V(no sphere); elfe3D: sphere run - reference run (the mesh error largely cancels)
                max|A_elfe - A_series| / max|A_series| and the size of the anomaly max|A_series| / max|V_series|
 Writes <folder>/cases/<case>/comparison/elfe3d_sphere.txt and the report <folder>/report/{report.tex, fig/*.pdf}
-(setup, total field and anomaly per case and profile; E in nV/m, H in uA/m; series exactly as written by this package, elfe3D converted to its convention, H = -H_elfe3D).
+(setup, total field and anomaly per case and profile; E in mV/m, H in uA/m; series exactly as written by this package, elfe3D converted to its convention, H = -H_elfe3D).
 Usage: python3 report_elfe3d_sphere.py <folder (with cases/)> [<elfe3d folder without sphere>, default ../elfe3d_topo]"""
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -128,7 +128,7 @@ For each source two figures: the total field with the sphere, and the anomaly of
 the difference of the run with the sphere and a run on the identical mesh with the host resistivity in the sphere, so
 that the discretisation error of the background largely cancels; the series anomaly is the series with the sphere
 minus the series without it.  Receivers 1 cm below the surface on the x- and y-profile from $-600$ m to 600 m every
-20 m.  Fields per 1 A source current, E in nV/m, H in $\mu$A/m, time dependence $e^{-i\omega t}$, in the
+20 m.  Fields per 1 A source current, E in mV/m, H in $\mu$A/m, time dependence $e^{-i\omega t}$, in the
 convention of this package: the series exactly as it writes them, elfe3D converted ($H = -H_\mathrm{elfe3D}$).
 \tableofcontents
 \clearpage

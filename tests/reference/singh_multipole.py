@@ -15,8 +15,7 @@ Frequency domain (exact for each degree n):
   Voltage: V_s(w) = 2 pi a * sum_n s_n h_n(k_h c) P_n^1(cos alpha).
 Time domain: switch-off, V_off(t) = -(2/pi) int_0^inf Re V(w) sin(w t)/w dw  (V(0) = 0), digital filter
   key_201_CosSin_2012 (empymod).
-Usage: python singh_multipole.py  -> self checks (the second one needs the module lee_mehrpol,
-which is not part of this repository)."""
+Usage: python singh_multipole.py  -> self checks (the second one against nabighian_multipole.py)."""
 import os, sys
 import numpy as np
 from scipy.special import spherical_jn, spherical_yn, lpmv
@@ -154,8 +153,8 @@ def _tests():
         w = _F.base / t
         num = np.sum(1 / (w * (1 + w**2)) * _F.sin) / t
         print(f"   t = {t:5.2f}: Filter {num:.8f}   exact {np.pi/2*(1-np.exp(-t)):.8f}")
-    print("\nTEST 2  quasi-static limit (sigma_h -> 1e-9) against lee_mehrpol.py (Nabighian)")
-    from lee_mehrpol import Vs_multipole
+    print("\nTEST 2  quasi-static limit (sigma_h -> 1e-9) against nabighian_multipole.py (Nabighian)")
+    from nabighian_multipole import Vs_multipole
     T = np.geomspace(6.62e-4, 8.65e-2, 7)
     ref = Vs_multipole(T, A, H, B, SIG, nmax=30)
     vs = Vs_time(T, A, H, B, 1e-9, SIG)

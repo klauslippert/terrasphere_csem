@@ -1,0 +1,7 @@
+# T4_loop_large: series (height 0) vs empymod, time domain 9.19e-06..10 s; curve: max_t |dV| / max_t |V_empymod| per receiver (median / max over receivers); pointwise: max |dV| / |V_empymod| where |V_empymod| > 1e-06 of its maximum (max over receivers); n: receivers compared; zero: level of the receivers where the component vanishes by symmetry (< 1e-06 of the largest E resp. dB/dt)
+component    n  curve med  curve max  pointwise     zero   curve max per decade: 1e-6s 1e-5s 1e-4s 1e-3s 1e-2s 1e-1s 1e0s 1e1s
+Ex           4    3.6e-08    3.8e-08    4.5e-07    2e-16   3.8e-08 3.5e-08 9.4e-09 1.6e-09 8.4e-11 5.5e-13 5.4e-13 4.5e-13
+Ey           4    3.6e-08    3.8e-08    4.5e-07    4e-16   3.8e-08 3.5e-08 9.4e-09 1.6e-09 8.4e-11 5.5e-13 5.4e-13 4.5e-13
+dBx/dt       4    1.2e-09    1.5e-09    1.2e-06    1e-15   1.5e-09 1.5e-09 1.4e-09 5.8e-10 2.9e-12 2.3e-14 2.3e-15 7.8e-16
+dBy/dt       4    1.2e-09    1.5e-09    1.2e-06    8e-16   1.5e-09 1.5e-09 1.4e-09 5.8e-10 2.9e-12 2.3e-14 2.3e-15 7.8e-16
+dBz/dt      10    3.5e-08    3.9e-08    4.1e-08        -   3.9e-08 3.6e-08 9.2e-09 1.5e-09 9.5e-11 1.1e-12 1.6e-15 2.5e-16

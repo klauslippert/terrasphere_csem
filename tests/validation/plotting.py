@@ -6,10 +6,43 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.ticker
 
 COLORS = ['#1f5fa8', '#2a9d5c', '#d9731a', '#8e44ad', '#c0392b']        # per frequency
 COMPONENTS = ['Ex', 'Ey', 'Ez', 'Hx', 'Hy', 'Hz']
 MODEL_COLORS = {0.0: 'k', 1.0: '#c0392b', -1.0: '#1f5fa8'}
+
+
+def factor_into_labels(fig):
+    """Every linear y-axis of fig: no separate factor or offset above the axis; a power of ten of the tick values
+    goes into the axis label instead, 'E (mV/m)' -> 'E ($10^{-11}$ mV/m)' (a label without a unit in parentheses
+    gets '($\\times10^{n}$)' appended).  Tick labels show the values divided by that power, with the fewest decimals
+    that show them exactly.  Call after plotting, before tight_layout."""
+    fig.canvas.draw()
+    for a in fig.axes:
+        if a.get_yscale() != 'linear' or not a.get_visible() or not a.axison:
+            continue
+        lo, hi = a.get_ylim()
+        ticks = [v for v in a.get_yticks() if min(lo, hi) - 1e-12 * abs(hi - lo) <= v <= max(lo, hi) + 1e-12 * abs(hi - lo)]
+        m = max((abs(v) for v in ticks), default=0.0)
+        oom = int(np.floor(np.log10(m))) if m > 0 and not 1e-2 <= m < 1e4 else 0
+        sc = 10.0 ** -oom
+        for nd in range(0, 16):                                      # fewest decimals that keep the ticks distinct
+            labs = [f'{v * sc + 0.0:.{nd}f}' for v in ticks]
+            if len(set(labs)) == len(labs) and all(abs(float(q) - v * sc) <= 1e-9 * max(m * sc, 1e-300)
+                                                    for q, v in zip(labs, ticks)):
+                break
+        a.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(
+            lambda v, _, sc=sc, nd=nd: f'{v * sc + 0.0:.{nd}f}'.replace('-0' + ('.' + '0' * nd if nd else ''),
+                                                                       '0' + ('.' + '0' * nd if nd else ''))))
+        a.yaxis.offsetText.set_visible(False)
+        if oom:
+            lab = a.get_ylabel()
+            if lab.endswith(')') and '(' in lab:
+                i = lab.rindex('(')
+                a.set_ylabel(lab[:i] + '($10^{%d}$ ' % oom + lab[i + 1:], fontsize=a.yaxis.label.get_fontsize())
+            else:
+                a.set_ylabel((lab + ' ' if lab else '') + r'($\times10^{%d}$)' % oom, fontsize=a.yaxis.label.get_fontsize())
 
 
 def source_polylines(st):
@@ -102,6 +135,7 @@ def setup_figure(st, d, prof, H, path):
     a2.legend(fontsize=7, loc='upper center', bbox_to_anchor=(0.5, -0.17), ncol=3, frameon=False)
     for a in (a1, a2):
         a.tick_params(labelsize=8)
+    factor_into_labels(fig)
     fig.tight_layout(); fig.savefig(path); plt.close(fig)
 
 
@@ -121,7 +155,7 @@ def profile_figure(st, d, ser, ih, prof, path, P, ref, comps=COMPONENTS):
         for k, c in enumerate(COMPONENTS):
             if c not in comps:
                 continue
-            sc = 1e9 if k < 3 else 1e6
+            sc = 1e3 if k < 3 else 1e6
             for ir, (part, fn) in enumerate([('Re', np.real), ('Im', np.imag)]):
                 a = ax[2 * (k // 3) + ir, k % 3]
                 a.plot(pos, sc * fn(ser[ih, jf, k, sel]), '-', color=COLORS[jf], lw=1.1,
@@ -132,8 +166,10 @@ def profile_figure(st, d, ser, ih, prof, path, P, ref, comps=COMPONENTS):
     for a in ax[-1]:
         a.set_xlabel(f'{prof} (m)', fontsize=8.5)
     for r in range(4):
-        ax[r, 0].set_ylabel('E (nV/m)' if r < 2 else r'H ($\mu$A/m)', fontsize=8.5)
+        for j in range(3):
+            ax[r, j].set_ylabel('E (mV/m)' if r < 2 else r'H ($\mu$A/m)', fontsize=8.5 if j == 0 else 7.5)
     ax[0, 0].legend(fontsize=7.5)
+    factor_into_labels(fig)
     fig.tight_layout(); fig.savefig(path); plt.close(fig)
     return origins
 

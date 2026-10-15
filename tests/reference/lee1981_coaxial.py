@@ -115,11 +115,11 @@ def Vs_time(t, a, h, b, sig_h, sig_s, nmax=15, refl=True, nw=260):
 
 
 def _tests():
-    """Self checks against the free-space reference and Lee's published numbers (need the modules
-    lee_mehrpol and lee1983_referenz, which are not part of this repository)."""
+    """Self checks against the free-space reference and Lee's published numbers (the modules
+    nabighian_multipole and lee1983_reference)."""
     import singh_multipole as S1
-    from lee_mehrpol import Vs_multipole
-    from lee1983_referenz import V_p as lee_Vp
+    from nabighian_multipole import Vs_multipole
+    from lee1983_reference import V_p as lee_Vp
     A, H, B, SIG = 400.0, 500.0, 225.0, 0.8606
     print("TEST 1  free-space limit in the frequency domain: half-space (sigma_h 1e-9) against reference 1 (full space 1e-9)")
     for w in (10.0, 1e3, 1e5):
@@ -130,7 +130,7 @@ def _tests():
         cp, Rh, Bh, g = parts_at(w, A, H, B, sh, SIG)
         n = np.arange(1, 16); rec = -4 * np.pi * n * (n + 1) * cp / ((2 * n + 1) * w * MU0)
         print(f"   sigma_h {sh:.0e}, w {w:6.0f}: max rel. deviation over n = 1..15: {np.max(np.abs(g-rec)/np.abs(rec)):.1e}")
-    print("\nTEST 3  time domain, free-space limit against lee_mehrpol.py (Nabighian)")
+    print("\nTEST 3  time domain, free-space limit against nabighian_multipole.py (Nabighian)")
     T = np.geomspace(6.62e-4, 8.65e-2, 6)
     v = Vs_time(T, A, H, B, 1e-9, SIG); ref = Vs_multipole(T, A, H, B, SIG)
     for i, t in enumerate(T):
