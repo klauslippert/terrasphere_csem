@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Stable ratios of spherical Bessel/Hankel functions and the logarithmic derivative of the Riccati-Bessel
 function psi_n(z) = z j_n(z), as used for the Mie coefficients (Bohren & Huffman 1983, ch. 4):
   r_k = h_k^(1)(z)/h_{k-1}^(1)(z)  (upward, stable), s_k = j_k(z)/j_{k-1}(z)  (downward continued fraction),

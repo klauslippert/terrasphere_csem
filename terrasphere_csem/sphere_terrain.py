@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Sphere below the terrain: coupling of the sphere model (sphere.py: conductive sphere in the layered earth,
 flat surface) with the field expansion of the terrain (terrain.py).
 

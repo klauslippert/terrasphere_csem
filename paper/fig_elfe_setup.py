@@ -33,9 +33,9 @@ a1.set_aspect('equal'); a1.set_xlim(-2000, 1500); a1.set_ylim(-1500, 1500)
 a1.set_xlabel('x (m)'); a1.set_ylabel('y (m)'); a1.set_title('plan view')
 a1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.17), ncol=3, fontsize=6.5)
 x = np.linspace(-800, 800, 800)
-for H, col, ls in ((90.0, GH_C['hill'], '-'), (30.0, GH_C['hill'], '--'), (-30.0, GH_C['valley'], '--'),
-                   (-90.0, GH_C['valley'], '-')):
-    a2.plot(x, st.height(x, 0 * x, H), ls, color=col, lw=1.0, label=f'{"hill" if H > 0 else "valley"} {abs(H):g} m')
+for H, col, ls in ((90.0, GH_C['hill'], '-'), (30.0, GH_C['hill'], '--'), (-30.0, GH_C['depression'], '--'),
+                   (-90.0, GH_C['depression'], '-')):
+    a2.plot(x, st.height(x, 0 * x, H), ls, color=col, lw=1.0, label=f'{"hill" if H > 0 else "depression"} {abs(H):g} m')
 dep, sig = list(st.layers.depths[1:]), list(st.layers.sigma_g)
 for z in dep:
     a2.axhline(-z, color='0.5', lw=0.7, ls='--')

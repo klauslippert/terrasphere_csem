@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Layered earth as a scalar propagator for the two plane-wave families.
 
 Global frame: depth zeta (positive DOWN), surface zeta = 0, interfaces at depths[0] = 0 < depths[1] < ...;

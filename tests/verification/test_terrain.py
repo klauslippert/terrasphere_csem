@@ -159,7 +159,7 @@ def test_layered_primary():
 
 def test_layered_dc():
     """Terrain over layered ground, direct-current limit: H-series (f = 1e-6 Hz, layered primary, TE/TM reflections)
-    against the potential expansion (potential reflections), hill and valley, conductive and resistive basement."""
+    against the potential expansion (potential reflections), hill and depression, conductive and resistive basement."""
     q = grounded_dipole((0.0, -1500.0), psi=0.0, length=100.0)
     g = terrain.Grid(q, n=256, dx=10.0, s=S)
     sel = np.abs(g.x) <= 600.0

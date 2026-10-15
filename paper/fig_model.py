@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Figure model: model.  Plan view (sources: wire, grounded dipole, loop around the hill; terrain contours; sphere outline;
-receiver profiles) and cross-section y = 0 (hill and valley, layer interface, sphere).
+receiver profiles) and cross-section y = 0 (hill and depression, layer interface, sphere).
 Usage: python3 fig_model.py <output-dir>"""
 import os, sys
 import numpy as np
@@ -25,7 +25,7 @@ b = ax[1]
 xs = np.linspace(-700, 700, 701)
 b.fill_between(xs, -330, 300, color='white')
 b.plot(xs, h(xs, 0, 30.0), color=C['hill'], label='hill, H = 30 m')
-b.plot(xs, h(xs, 0, -30.0), color=C['valley'], label='valley, H = -30 m')
+b.plot(xs, h(xs, 0, -30.0), color=C['depression'], label='depression, H = -30 m')
 b.axhline(0, color=C['flat'], lw=0.6, ls=':')
 b.axhline(-300, color=C['layer'], lw=1.2); b.text(-680, -290, r'interface, $\sigma_2$ below', fontsize=6.5)
 b.text(-680, -60, r'top layer $\sigma_1$', fontsize=6.5); b.text(-680, 40, 'air', fontsize=6.5)

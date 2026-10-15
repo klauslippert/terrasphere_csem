@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Point-dipole sources and their azimuthal mode amplitudes about an arbitrary vertical axis.
 
 Dipole fields in a homogeneous conductive medium (k, sigma), G = e^{ikR}/(4 pi R) = int (lam/(4 pi u)) J0(lam rho') e^{-u|z-zs|} dlam:

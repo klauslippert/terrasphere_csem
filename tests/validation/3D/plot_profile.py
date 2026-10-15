@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Figure: series (lines) against elfe3D (symbols) on the x- and y-profile of one computation folder, one frequency,
-all six components, models flat / hill / valley; real part solid with circles, imaginary part dashed with squares.
+all six components, models flat / hill / depression; real part solid with circles, imaginary part dashed with squares.
 Series exactly as written by this package (results/fields.npz); elfe3D converted to its convention (H = -H_elfe3D).
 Usage: python3 plot_profile.py <folder> <f in Hz> [out-dir name for the hf band, default out]"""
 import os, sys
@@ -37,7 +37,7 @@ def main():
             sel = prof == p
             for k, c in enumerate(COMPONENTS):
                 a = ax[row, k]; sc = 1e9 if k < 3 else 1e6
-                lab = 'flat' if H == 0 else (f'hill {H:g} m' if H > 0 else f'valley {-H:g} m')
+                lab = 'flat' if H == 0 else (f'hill {H:g} m' if H > 0 else f'depression {-H:g} m')
                 a.plot(pos[sel], sc * ser[ih, k, sel].real, '-', color=COLOR[H], lw=1.1, label=f'{lab} (series)')
                 a.plot(pos[sel], sc * ser[ih, k, sel].imag, '--', color=COLOR[H], lw=1.1)
                 if el is not None:

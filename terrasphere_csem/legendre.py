@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Associated Legendre functions for real and complex arguments, in a scaled form that stays finite
 for the complex 'angles' of the plane-wave spectrum.
 

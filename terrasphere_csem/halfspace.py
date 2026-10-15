@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Closed-form surface fields of horizontal electric dipoles (HED) on a homogeneous half-space, quasi-static, source
 and receiver at the surface (time convention e^{-iwt}).
 

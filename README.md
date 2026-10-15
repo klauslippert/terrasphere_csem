@@ -1,7 +1,7 @@
 # Semi-analytic solutions for a conductive sphere in a layered earth with Gaussian topography in 3D controlled-source electromagnetics
 
 `terrasphere_csem` computes the frequency- and time-domain electromagnetic fields of grounded wires, dipoles and loops
-over a layered earth with a Gaussian hill or valley and an optional conductive sphere below it (quasi-static, no
+over a layered earth with a Gaussian hill or depression and an optional conductive sphere below it (quasi-static, no
 displacement currents).
 
 ## Installation
@@ -9,7 +9,6 @@ displacement currents).
 Python >= 3.11 with numpy and scipy:
 
     pip install .              # the package
-    pip install .[test]        # with empymod, for the comparison tests in tests/verification/empymod/
 
 ## Usage
 
@@ -40,8 +39,8 @@ output and numerics.
 - `tests/verification/`: the building blocks and complete fields against analytic solutions, independent reference
   implementations and, in `empymod/`, the 1-D code empymod.
 - `tests/validation/`: comparison with independent codes for complete models, as case folders with control files,
-  inputs, results and reports: `1D/empymod` (flat model against empymod), `3D/elfe3d_topo` (hills and valleys against
-  the 3-D finite-element code elfe3D) and `3D/elfe3d_sphere` (sphere under the hill against elfe3D); overall report
+  inputs, results and reports: `1D/empymod` (flat model against empymod), `3D/elfe3d_topo` (hills and depressions
+  against the 3-D finite-element code elfe3D) and `3D/elfe3d_sphere` (sphere under the hill against elfe3D); overall report
   in `tests/validation/report/`.  See the READMEs there.
 
 Third-party data and codes: see `CONTRIBUTIONS.md`.

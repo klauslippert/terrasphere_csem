@@ -5,7 +5,7 @@ Re/Im of three components per receiver, frequency-major; receivers in the order 
 Conventions (elfe3D appendix of the paper): E_elfe3D = E_ours, H_elfe3D = -H_ours (both e^{-iwt}).
 Measures per model, frequency and component (relative to the profile maximum over both profiles):
   total field   |V_elfe - V_series| / max|V_series|                         (median, 90th percentile)
-Only models with terrain (hill, valley) have elfe3D runs; the flat model is validated against empymod.
+Only models with terrain (hill, depression) have elfe3D runs; the flat model is validated against empymod.
 Writes <folder>/comparison/elfe3d_<out>.txt and .npz.
 Usage: python3 compare_elfe3d.py <folder> [out-dir name, default out]"""
 import os, sys
@@ -19,8 +19,8 @@ TO_OURS = np.array([1.0, 1.0, 1.0, -1.0, -1.0, -1.0])      # elfe3D -> this pack
 
 
 def model_name(H):
-    """Name of the model of height H [m] used in the elfe3D folder names: 'flat', 'hill<H>' or 'valley<H>'."""
-    return 'flat' if H == 0 else (f'hill{abs(H):g}' if H > 0 else f'valley{abs(H):g}')
+    """Name of the model of height H [m] used in the elfe3D folder names: 'flat', 'hill<H>' or 'depression<H>'."""
+    return 'flat' if H == 0 else (f'hill{abs(H):g}' if H > 0 else f'depression{abs(H):g}')
 
 
 def is_finished(run):
@@ -72,7 +72,7 @@ def main():
                 dev = np.abs(e[:, k] - s[:, k]) / np.abs(s[:, k]).max()
                 tab[('total', H, fk, c)] = (np.median(dev), np.percentile(dev, 90))
                 row.append(f"{100 * np.median(dev):5.2f}/{100 * np.percentile(dev, 90):5.1f}")
-            report_lines.append(f"total  {model_name(H):9s} f = {f:8.3g} Hz  " + '  '.join(f'{c} {r}' for c, r in zip(COMPONENTS, row)))
+            report_lines.append(f"total  {model_name(H):12s} f = {f:8.3g} Hz  " + '  '.join(f'{c} {r}' for c, r in zip(COMPONENTS, row)))
     os.makedirs(os.path.join(st.folder, 'comparison'), exist_ok=True)
     open(os.path.join(st.folder, 'comparison', f'elfe3d_{outname}.txt'), 'w').write('\n'.join(report_lines) + '\n')
     np.savez(os.path.join(st.folder, 'comparison', f'elfe3d_{outname}.npz'),

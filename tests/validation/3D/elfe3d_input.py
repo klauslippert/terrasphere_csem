@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """elfe3D input of one computation folder: for every height H of <folder>/control.toml and every frequency
 band a run folder <folder>/elfe3d/<model>_<band>/in/ with model.poly (TetGen PLC), model.a.node (extra vertices
-around the receivers), regionparameters.txt, source.txt and elfe3D_input.txt; <model> = hill<H> | valley<H>
+around the receivers), regionparameters.txt, source.txt and elfe3D_input.txt; <model> = hill<H> | depression<H>
 (no run for the flat model, H = 0: validated against empymod).
 Bands: 'nf' = frequencies < 100 Hz, 'hf1k' = 100 Hz..10 kHz (one frequency per run, finer mesh); domain +-15 km.
 Frequencies >= 10 kHz get no run.
@@ -241,7 +241,7 @@ def build(st, H, band):
     assert MX[0] > -D + 500 and MX[1] < D - 500 and MY[0] > -D + 500 and MY[1] < D - 500, "domain too small"
     z_lo, z_hi = min(0.0, H) - 40.0, max(0.0, H) + 40.0
     zi = [-d for d in st.layers.depths[1:]]                       # interface planes (z < 0)
-    assert all(z < z_lo for z in zi), "layer interfaces must lie below the fine box (valley floor - 40 m)"
+    assert all(z < z_lo for z in zi), "layer interfaces must lie below the fine box (bottom of the depression - 40 m)"
     sph = sphere_geometry(st)
     if sph is not None:                                            # sphere box between the planes
         (xc, yc, zc), r = sph['center'], sph['r']; top, bot = zc + r, zc - r
@@ -305,8 +305,8 @@ def input_file(st, freqs, hfun, source, D, band):
 
 
 def model_name(H):
-    """Name of the model of height H [m]: 'flat', 'hill<H>' or 'valley<H>'."""
-    return 'flat' if H == 0 else (f'hill{abs(H):g}' if H > 0 else f'valley{abs(H):g}')
+    """Name of the model of height H [m]: 'flat', 'hill<H>' or 'depression<H>'."""
+    return 'flat' if H == 0 else (f'hill{abs(H):g}' if H > 0 else f'depression{abs(H):g}')
 
 
 def main():

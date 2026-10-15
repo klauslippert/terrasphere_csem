@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Figure elfe_topo: comparison with elfe3D over topography.  Case T1 (grounded wire in line, tests/validation/3D/
-elfe3d_topo/cases/T1_wire_inline), x-profile, hill and valley of 90 m: Re and Im of E_x, E_z (zero on a flat
+elfe3d_topo/cases/T1_wire_inline), x-profile, hill and depression of 90 m: Re and Im of E_x, E_z (zero on a flat
 surface: the terrain effect alone) and H_y at 0.1 Hz, 10 Hz and 1 kHz; series of this package (results/fields.npz,
 lines) and elfe3D (every second receiver, circles; band nf below 100 Hz, hf1k above, H = -H_elfe3D).
 Usage: python3 fig_elfe_topo.py <output-dir>"""
@@ -32,7 +32,7 @@ for im, H in enumerate((90.0, -90.0)):
                 a = ax[2 * im + ir, jc]
                 a.plot(x, sc * fn(ser[ih, jf, k, sel]), color=COL[jf], label=f'{f:g} Hz' if (im, ir, jc) == (0, 0, 0) else None)
                 a.plot(x[::2], sc * fn(el[k, sel][::2]), 'o', ms=2.6, mfc='none', mew=0.8, color=COL[jf])
-                a.set_title(f'{"hill" if H > 0 else "valley"} {abs(H):g} m: {part} {lab}')
+                a.set_title(f'{"hill" if H > 0 else "depression"} {abs(H):g} m: {part} {lab}')
                 a.set_ylabel(f'{part} {lab} ({unit})')
 for a in ax[-1]:
     a.set_xlabel('x (m)')

@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MIT
-"""Gaussian hill or valley on a homogeneous half-space: field expansion in the terrain height
+# Copyright (c) 2026 Klaus Lippert
+"""Gaussian hill or depression on a homogeneous half-space: field expansion in the terrain height
 (time convention e^{-iwt}).
 
 Physics (quasi-static, mu = mu0 everywhere, time e^{-iwt}):
@@ -46,7 +47,7 @@ def _ifft2(a):
 
 
 def terrain_height(x, y, H, s):
-    """Terrain height h(x, y) = H exp(-(x^2 + y^2)/(2 s^2)) (z up; H < 0: valley)."""
+    """Terrain height h(x, y) = H exp(-(x^2 + y^2)/(2 s^2)) (z up; H < 0: depression)."""
     return H * np.exp(-(np.asarray(x) ** 2 + np.asarray(y) ** 2) / (2 * s ** 2))
 
 
@@ -178,7 +179,7 @@ class Series:
 
     def __init__(self, grid, ground, kc=0.2):
         """ground: conductivity of the homogeneous ground (float) or a LayerStack stack whose top layer carries the
-        terrain (all interfaces below the valley floor)."""
+        terrain (all interfaces below the bottom of the depression)."""
         self.g = grid
         self.st = ground_layers(ground)
         self.sigma = self.st.sigma[1]

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Main program of the package (series computation): reads a control file, writes <folder of the control file>/results/:
   log.txt      control file, grids, timing, convergence, box correction
   coefficients.npz  only if [output] formats contains "coefficients": the series coefficients from which the

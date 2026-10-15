@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Natural time constants (poles) of the sphere.
 Free space (k_h -> 0): the TE Mie denominator reduces to  z j_{n-1}(z) + (mu_r - 1) n j_n(z) = 0,  z = k_s b
 (for mu_r = 1 the zeros of j_{n-1}: Nabighian 1970; with permeability: Wait 1951/1953).  With omega = -i/tau:

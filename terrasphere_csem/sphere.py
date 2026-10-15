@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Assembly: conductive (permeable) sphere in the layered earth, all degrees n <= nmax and orders |m| <= nmax,
 TE and TM spherical modes, arbitrary dipole/loop/wire transmitters and dipole/loop/wire receivers.
 

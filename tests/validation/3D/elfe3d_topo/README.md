@@ -1,7 +1,7 @@
 # Validation against elfe3D
 
 Comparison runs of the 3D finite-element code **elfe3D** for the four validation cases of this package (grounded
-wire in line and broadside, offset loop, large loop; hill and valley; 0.1 Hz, 10 Hz, 1 kHz).
+wire in line and broadside, offset loop, large loop; hill and depression; 0.1 Hz, 10 Hz, 1 kHz).
 The flat model is validated against empymod (`../../1D/empymod`) and has no elfe3D run here.
 The folder is self-contained for the elfe3D side and can be copied to another machine.
 
@@ -56,7 +56,7 @@ giving `cases/<case>/results/` (`fields.npz`, `fields.csv`, `log.txt`).
 | `T4_loop_large` | square loop 2.6 km x 2.6 km around the hill |
 
 All cases (`cases/<case>/control.toml`): layers 0.01 / 0.005 / 0.03 S/m, interfaces at 200 m and 600 m depth;
-Gaussian terrain of width 150 m at the origin, height +30 m (`hill30`), -30 m (`valley30`); receivers on
+Gaussian terrain of width 150 m at the origin, height +30 m (`hill30`), -30 m (`depression30`); receivers on
 the x- and y-profile from -600 m to 600 m every 20 m, 1 cm below the surface (122 receivers).
 
 | band | frequencies | domain | mesh | per run |
@@ -87,5 +87,5 @@ not kept.  Comparison with the series: `tests/validation/3D/compare_elfe3d.py <c
 <case folder>`.  Regenerate the inputs: `python3 tests/validation/3D/elfe3d_input.py <case folder>` (settings per band in `BANDS`; it
 reproduces the inputs here exactly).
 
-Report `report/report.pdf` (per case and profile: setup and fields of hill and valley, series against elfe3D):
+Report `report/report.pdf` (per case and profile: setup and fields of hill and depression, series against elfe3D):
 `python3 tests/validation/3D/report_elfe3d.py tests/validation/3D/elfe3d_topo`, then compile `report/report.tex` (pdflatex or tectonic).

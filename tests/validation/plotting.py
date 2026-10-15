@@ -106,7 +106,7 @@ def setup_figure(st, d, prof, H, path):
     x = np.linspace(*xl, 800)
     zmin = -st.layers.depths[-1] - 250
     a2.plot(x, st.height(x, 0.0 * x, H), '-', color=MODEL_COLORS[float(np.sign(H))], lw=1.2,
-            label=(f'hill {H:+g} m' if H > 0 else f'valley {H:+g} m' if H < 0 else 'flat'))
+            label=(f'hill {H:+g} m' if H > 0 else f'depression {H:+g} m' if H < 0 else 'flat'))
     dep = list(st.layers.depths[1:]); sig = list(st.layers.sigma_g)
     for z in dep:
         a2.axhline(-z, color='0.5', lw=0.8, ls='--')

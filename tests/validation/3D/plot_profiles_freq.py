@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Figure per model with terrain (hill / valley; the flat model has no elfe3D run): series (lines) against elfe3D
+"""Figure per model with terrain (hill / depression; the flat model has no elfe3D run): series (lines) against elfe3D
 (symbols) on the x- and y-profile, all six components; real and imaginary part in separate panels, all frequencies
 with an elfe3D run in one panel (colour), physical units (E in nV/m, H in uA/m, per 1 A; no normalisation).
 Series exactly as written by this package (results/fields.npz); elfe3D converted to its convention (H = -H_elfe3D).
@@ -72,7 +72,7 @@ def main():
         for r in range(4):
             ax[r, 0].set_ylabel('E (nV/m)', fontsize=8); ax[r, 3].set_ylabel(r'H ($\mu$A/m)', fontsize=8)
         ax[0, 0].legend(fontsize=7)
-        lab = f'hill {H:g} m' if H > 0 else f'valley {-H:g} m'
+        lab = f'hill {H:g} m' if H > 0 else f'depression {-H:g} m'
         fig.suptitle(f'{st.name}, {lab}: series (lines) vs elfe3D (circles, every 2nd receiver); 1 A source\n'
                      + '; '.join(sources), fontsize=9.5)
         fig.tight_layout()

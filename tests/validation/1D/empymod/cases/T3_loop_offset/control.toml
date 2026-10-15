@@ -1,6 +1,7 @@
 # empymod comparison (flat model) T3: square loop 400 x 400 m, centre (-1500, 0), counter-clockwise seen from above.
 # Three layers (interfaces at 200 m and 600 m), no sphere: the setup of ../../../../3D/elfe3d_topo/cases/T3_loop_offset.
-# Flat model only (H = 0): the 1-D layered-earth field, compared with empymod; hills and valleys: see ../../../3D/elfe3d_topo.
+# Flat model only (H = 0): the 1-D layered-earth field, compared with empymod;
+# hills and depressions: see ../../../3D/elfe3d_topo.
 name = "T3_loop_offset"
 [terrain]
 width = 150.0

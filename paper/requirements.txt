@@ -1,0 +1,2 @@
+# Figure scripts of the paper, in addition to ../requirements.txt (exact versions used, 2026-10-15).
+matplotlib==3.11.2

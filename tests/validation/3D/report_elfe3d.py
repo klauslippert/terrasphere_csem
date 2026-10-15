@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """LaTeX report of the elfe3D validation: one section per case and profile (x, y), one subsection (page) per model
-with terrain (hill, valley; the flat model is validated against empymod elsewhere): setup figure (plan view and
+with terrain (hill, depression; the flat model is validated against empymod elsewhere): setup figure (plan view and
 xz-section through y = 0 with source, profile, terrain and layers), then the fields on that profile: Re/Im of E and H,
 all three components, series (lines) against elfe3D (circles), all frequencies with an elfe3D run.  Physical units (E in mV/m, H in uA/m, per 1 A); series exactly as written by this package, elfe3D converted to its
 convention (H = -H_elfe3D).
@@ -36,7 +36,7 @@ def main():
                 if H == 0 or (only is not None and abs(H) != only):    # flat: validated against empymod
                     continue
                 m = model_name(H)
-                lab = f'hill {H:g} m' if H > 0 else f'valley {-H:g} m'
+                lab = f'hill {H:g} m' if H > 0 else f'depression {-H:g} m'
                 setup, fp = f'fig/{c}_{prof}_{m}_setup.pdf', f'fig/{c}_{prof}_{m}.pdf'
                 setup_figure(st, d, prof, H, os.path.join(out, setup))
                 orig = profile_figure(st, d, ser, ih, prof, os.path.join(out, fp), P,
@@ -61,7 +61,7 @@ def main():
 \begin{document}
 \maketitle
 Series solution of this package (lines) against the 3D finite-element code elfe3D (circles) for four sources,
-Gaussian hills and valleys (height """ + ' m and '.join(r'$\pm%g$' % h for h in hs) + r""" m, width $s = 150$ m); the flat model is validated against
+Gaussian hills and depressions (height """ + ' m and '.join(r'$\pm%g$' % h for h in hs) + r""" m, width $s = 150$ m); the flat model is validated against
 empymod.  Three layers with
 interfaces at 200 m and 600 m depth.  Receivers 1 cm below the surface on the x- and y-profile from $-600$ m to
 600 m every 20 m.  Fields per 1 A source current, E in mV/m, H in $\mu$A/m, time dependence $e^{-i\omega t}$,

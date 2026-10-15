@@ -1,0 +1,4 @@
+# Comparison tests with empymod in this folder, in addition to ../../../requirements.txt (exact versions used,
+# 2026-10-15).
+empymod==2.6.0
+libdlf==0.3.0

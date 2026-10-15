@@ -1,6 +1,7 @@
 # empymod comparison in the time domain (flat model) T1: grounded wire in line with the x-profile, 500 m, centre 1500 m left of the hill.
 # Three layers (interfaces at 200 m and 600 m), no sphere: the setup of ../../../../3D/elfe3d_topo/cases/T1_wire_inline.
-# Flat model only (H = 0): the 1-D layered-earth field, compared with empymod; hills and valleys: see ../../../../3D/elfe3d_topo.
+# Flat model only (H = 0): the 1-D layered-earth field, compared with empymod;
+# hills and depressions: see ../../../../3D/elfe3d_topo.
 name = "T1_wire_inline"
 [terrain]
 width = 150.0

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Figure terrain_dc: direct-current check of the terrain series.  E_x and E_y along the x-profile (y = 0) over
-hill and valley (H = +-90 m) from the H-formulation (terrain.coefficients at f = 1e-6 Hz, lines) and the independent
+hill and depression (H = +-90 m) from the H-formulation (terrain.coefficients at f = 1e-6 Hz, lines) and the independent
 scalar-potential expansion (terrain_dc.coefficients, markers); lower row: difference between the two relative to the
 profile maximum.  Grounded wire over the half-space 0.01 S/m (cases.py 'wire_halfspace'), 12 orders, 512^2 x 10 m.
 Usage: python3 fig_terrain_dc.py <output-dir>"""
@@ -22,7 +22,7 @@ fig, ax = plt.subplots(2, 2, figsize=(7.2, 4.4), sharex=True, gridspec_kw=dict(h
 for j, (k, lab) in enumerate([(0, '$E_x$'), (1, '$E_y$')]):
     a, b = ax[0, j], ax[1, j]
     a.plot(x, partial_sum(CE[0], 0.0)[k, 1, sel].real * 1e9, color=C['flat'], label='flat')
-    for H, col, nm in [(90.0, C['hill'], 'hill'), (-90.0, C['valley'], 'valley')]:
+    for H, col, nm in [(90.0, C['hill'], 'hill'), (-90.0, C['depression'], 'depression')]:
         vh = partial_sum(CE[0], H)[k, 1, sel].real; vd = partial_sum(CD, H)[k, 1, sel].real
         a.plot(x, vh * 1e9, color=col, label=f'{nm}, H-formulation')
         a.plot(x[::4], vd[::4] * 1e9, 'o', ms=3, mfc='none', color=col, label=f'{nm}, potential')

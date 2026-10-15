@@ -1,0 +1,5 @@
+# Exact versions with which the package was tested (Python 3.15.0, 2026-10-15); the package itself is installed with
+# pip install .  Extra libraries: paper/requirements.txt (figures), tests/validation/requirements.txt (reports,
+# empymod comparison), tests/verification/empymod/requirements.txt (empymod tests).
+numpy==2.5.4
+scipy==1.18.1

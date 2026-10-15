@@ -2,17 +2,17 @@
 # Units: SI.  Horizontal positions (x, y) on the surface; z points up; depths are positive downwards.
 # Run:  python3 -m terrasphere_csem <this file>   (results in results/ next to it).
 
-name = "example_hill_valley_sphere"      # label of the run (default: folder name)
+name = "example_hill_depression_sphere"  # label of the run (default: folder name)
 
 # ---------------------------------------------------------------- terrain
 [terrain]
-# Gaussian hill/valley  h(x, y) = H * exp(-(x^2 + y^2) / (2 s^2)), centred at (0, 0).
+# Gaussian hill/depression  h(x, y) = H * exp(-(x^2 + y^2) / (2 s^2)), centred at (0, 0).
 width   = 150.0                          # s [m], horizontal width of the hill
-heights = [0.0, 30.0, -30.0]             # H [m]: 0 = flat, > 0 = hill, < 0 = valley.  One run per height.
+heights = [0.0, 30.0, -30.0]             # H [m]: 0 = flat, > 0 = hill, < 0 = depression.  One run per height.
 
 # ---------------------------------------------------------------- layered earth
 [layers]
-# The top layer carries the terrain: all interfaces must lie below the valley floor.
+# The top layer carries the terrain: all interfaces must lie below the bottom of the depression.
 depths       = [0.0, 100.0, 350.0]       # depths of the layer tops [m]; the first one is 0, the last layer is a half-space
 conductivity = [0.01, 0.005, 0.03]       # S/m, one value per layer
 

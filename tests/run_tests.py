@@ -6,7 +6,7 @@ modules only.  verification/: the building blocks and complete fields against an
 verification/empymod/, against empymod.  validation/ holds the case folders of the comparisons with empymod (1D/)
 and elfe3D (3D/), run by their own scripts (see the READMEs there).  Arguments select by test-file name
 (e.g. test_mie) or by folder (verification, validation, or a subfolder such as empymod); without arguments
-everything runs.  The tests in verification/empymod/ need empymod (pip install .[test])."""
+everything runs.  The tests in verification/empymod/ need empymod (tests/verification/empymod/requirements.txt)."""
 import os, sys, time, importlib.util, traceback
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); sys.path.insert(0, os.path.dirname(HERE))
 

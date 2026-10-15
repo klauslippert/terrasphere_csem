@@ -1,6 +1,7 @@
 # elfe3D comparison T2: grounded wire broadside (along y), 500 m, centre 1500 m left of the hill.
 # Three layers (interfaces at 200 m and 600 m: thinner layers give > 2 million edges in the elfe3D mesh), no sphere.
-# Heights +30 / -30 / +90 / -90 m = hills and valleys (Gaussian, width 150 m, centre at the origin); flat: see empymod.
+# Heights +30 / -30 / +90 / -90 m = hills and depressions (Gaussian, width 150 m, centre at the
+# origin); flat: see empymod.
 name = "T2_wire_broadside"
 [terrain]
 width = 150.0

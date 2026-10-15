@@ -22,7 +22,7 @@ if not os.path.exists(P):
 d = np.load(P)
 CE, CH, x = d['CE'], d['CH'], d['x']
 ip = int(np.argmin(np.abs(x)))
-Hs = [30.0, 90.0, 150.0]; cols = [C['hill'], C['valley'], C['third']]
+Hs = [30.0, 90.0, 150.0]; cols = [C['hill'], C['depression'], C['third']]
 fig, ax = plt.subplots(2, 3, figsize=(7.2, 4.2), sharex=True, sharey=True)
 for j, f in enumerate(FR):
     for r, (lab, A, k) in enumerate([('$E_x$', CE, 0), ('$H_z$', CH, 2)]):

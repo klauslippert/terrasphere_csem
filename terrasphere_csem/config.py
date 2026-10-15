@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Control file of a computation.
 
 Every computation lives in its own folder with the control file `control.toml`; the series results are written to
@@ -8,10 +9,10 @@ sources, the receiver positions, the grids and the sphere coupling from it.
 Control file (TOML, SI units; z up, positions on the surface (x, y); depth positive down):
 
     name = "inline_three"
-    [terrain]                      # Gaussian hill/valley h = H exp(-r^2/2s^2), centre (0, 0)
+    [terrain]                      # Gaussian hill/depression h = H exp(-r^2/2s^2), centre (0, 0)
     width = 150.0                  # s (m)
-    heights = [0.0, 30.0, -30.0]   # H (m): 0 flat, > 0 hill, < 0 valley; evaluated from the same coefficients
-    [layers]                       # the top layer carries the terrain; all interfaces lie below the valley floor
+    heights = [0.0, 30.0, -30.0]   # H (m): 0 flat, > 0 hill, < 0 depression; evaluated from the same coefficients
+    [layers]                       # the top layer carries the terrain; all interfaces lie below the depression
     depths = [0.0, 100.0, 350.0]   # depths of the layer tops (first = 0)
     conductivity = [0.01, 0.005, 0.03]   # S/m
     [sphere]                       # optional; omit the block for no sphere
@@ -74,7 +75,7 @@ class Config:
         self.layers = LayerStack(sch['depths'], sch['conductivity'])
         if self.layers.J > 1:
             assert self.layers.depths[1] > -min(0.0, min(self.heights)), \
-                "all layer interfaces must lie below the valley floor"
+                "all layer interfaces must lie below the bottom of the depression"
         self.sphere = d.get('sphere')
         if ('frequencies' in d) == ('time' in d):
             raise ValueError("give either [frequencies] or [time]")
@@ -164,5 +165,5 @@ class Config:
         return SphereTerrainHankel(km, g) if isinstance(g, HankelGrid) else SphereTerrain(km, g)
 
     def height(self, x, y, H):
-        """Terrain height H exp(-(x^2 + y^2)/(2 s^2)) [m] (z up) of the Gaussian hill (H < 0: valley) at (x, y)."""
+        """Terrain height H exp(-(x^2 + y^2)/(2 s^2)) [m] (z up) of the Gaussian hill (H < 0: depression) at (x, y)."""
         return H * np.exp(-(np.asarray(x) ** 2 + np.asarray(y) ** 2) / (2 * self.s ** 2))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Figure geometry: model geometry of the terrain study.  Plan view (wire, terrain contours, receiver profiles)
-and cross-section along y = 0 of hill and valley for H = 30 and 90 m (s = 150 m).
+and cross-section along y = 0 of hill and depression for H = 30 and 90 m (s = 150 m).
 Usage: python3 fig_geometry.py <output-dir>"""
 import os, sys
 import numpy as np
@@ -28,7 +28,7 @@ b = ax[1]
 xs = np.linspace(-700, 700, 701)
 for H, ls in [(30.0, '-'), (90.0, ':')]:
     b.plot(xs, h(xs, 0, H), color=C['hill'], ls=ls, label=f'hill, H = {H:.0f} m')
-    b.plot(xs, h(xs, 0, -H), color=C['valley'], ls=ls, label=f'valley, H = {H:.0f} m')
+    b.plot(xs, h(xs, 0, -H), color=C['depression'], ls=ls, label=f'depression, H = {H:.0f} m')
 b.axhline(0, color=C['flat'], lw=0.8)
 b.text(-650, -120, r'$\sigma$ = 0.01 S/m', fontsize=7); b.text(-650, 110, r'air, $\sigma$ = 0', fontsize=7)
 b.set_ylim(-150, 150); b.set_xlabel('x (m)'); b.set_ylabel('z (m)')

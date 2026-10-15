@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """One-dimensional (no sphere) fields of dipole sources in the layered earth, from the same spectral kernels
 that feed the sphere coupling.  The lambda integral is done with Key's 401-point Hankel filter key_401_2009
 (Key 2009, tables in filters/; the 201-point filter limits the accuracy to ~1e-5 near the source), the modes are taken about each dipole's own axis (m = 0, +-1 only)."""

@@ -1,5 +1,5 @@
 # Example control file: grounded wire in line with the x-profile, 500 m long, left of the hill; three layers
-# (interfaces at 200 m and 600 m), no sphere.  Heights 0 / +30 / -30 m = flat model, hill, valley.
+# (interfaces at 200 m and 600 m), no sphere.  Heights 0 / +30 / -30 m = flat model, hill, depression.
 name = "T1_wire_inline"
 [terrain]
 width = 150.0

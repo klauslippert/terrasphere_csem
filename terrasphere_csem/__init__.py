@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """terrasphere_csem -- semi-analytic frequency- and time-domain EM responses for two 3-D targets with common
 sources, conventions and time transform:
 
   * sphere.py   : conductive (permeable) sphere in a layered half-space (all multipoles, TE and TM)
-  * terrain.py  : Gaussian hill or valley h = H exp(-r^2/2s^2) on a layered half-space, field expansion in H,
+  * terrain.py  : Gaussian hill or depression h = H exp(-r^2/2s^2) on a layered half-space, field expansion in H,
                   sources on the flat ground off the hill; terrain_hankel.py, terrain_dc.py and sphere_terrain.py
                   extend it (Hankel-transform variant, direct-current check, sphere below the terrain)
 
@@ -18,4 +19,4 @@ grounded point dipole `grounded_dipole`.  The hill accepts HED-type sources on t
 Time domain (timedomain.py): Key's 201-point sine/cosine filter on a lagged time grid; Talbot inversion.
 """
 MU0 = 4e-7 * 3.141592653589793
-__version__ = "0.1"
+__version__ = "1.0.0"

@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Klaus Lippert
 """Digital linear filter coefficients of Kerry Key, shipped as plain-text tables in this folder.
 
 The tables are third-party data (Copyright Kerry Key, CC BY 4.0, see CONTRIBUTIONS.md and the header of each .txt

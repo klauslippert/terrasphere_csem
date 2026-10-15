@@ -1,0 +1,5 @@
+# Validation (reports, comparison with empymod in 1D/), in addition to ../../requirements.txt (exact versions used,
+# 2026-10-15).  elfe3D (3D/) is an external Fortran code, not a Python package: see the READMEs there.
+matplotlib==3.11.2
+empymod==2.6.0
+libdlf==0.3.0

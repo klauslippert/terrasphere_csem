@@ -1,13 +1,13 @@
 # T1_wire_inline: elfe3D (out) vs series (fft); median / 90th percentile in per cent
-total  hill30    f =      0.1 Hz  Ex  0.02/  0.2  Ey  0.25/  1.3  Ez  1.45/  4.3  Hx  0.09/  0.3  Hy  0.26/  0.3  Hz  0.24/  0.8
-total  valley30  f =      0.1 Hz  Ex  0.03/  0.1  Ey  0.28/  1.6  Ez  1.40/  4.3  Hx  0.38/  1.4  Hy  0.23/  0.3  Hz  1.16/  2.6
-total  hill90    f =      0.1 Hz  Ex  0.03/  0.4  Ey  0.22/  1.0  Ez  0.46/  2.0  Hx  0.15/  0.5  Hy  0.28/  0.4  Hz  0.38/  1.0
-total  valley90  f =      0.1 Hz  Ex  0.09/  0.3  Ey  0.43/  1.3  Ez  0.50/  1.8  Hx  0.53/  1.4  Hy  0.25/  0.3  Hz  0.55/  1.5
-total  hill30    f =       10 Hz  Ex  0.04/  0.2  Ey  0.27/  1.3  Ez  1.47/  4.4  Hx  0.13/  0.3  Hy  0.11/  0.2  Hz  0.32/  0.7
-total  valley30  f =       10 Hz  Ex  0.05/  0.1  Ey  0.28/  1.5  Ez  1.41/  4.4  Hx  0.50/  1.5  Hy  0.09/  0.2  Hz  1.04/  3.0
-total  hill90    f =       10 Hz  Ex  0.05/  0.4  Ey  0.31/  1.0  Ez  0.46/  2.0  Hx  0.15/  0.5  Hy  0.12/  0.2  Hz  0.34/  1.0
-total  valley90  f =       10 Hz  Ex  0.10/  0.3  Ey  0.42/  1.2  Ez  0.53/  1.9  Hx  0.51/  1.4  Hy  0.11/  0.2  Hz  0.69/  1.9
-total  hill30    f =    1e+03 Hz  Ex  0.26/  0.8  Ey  0.68/  1.4  Ez  1.03/  2.4  Hx  0.53/  1.0  Hy  0.21/  0.6  Hz  5.37/ 13.7
-total  valley30  f =    1e+03 Hz  Ex  0.34/  0.7  Ey  0.68/  1.8  Ez  1.18/  3.4  Hx  0.63/  1.1  Hy  0.21/  0.6  Hz  6.90/ 14.6
-total  hill90    f =    1e+03 Hz  Ex  0.22/  0.9  Ey  0.84/  1.3  Ez  0.45/  1.2  Hx  0.69/  1.3  Hy  0.22/  0.6  Hz  1.94/  7.7
-total  valley90  f =    1e+03 Hz  Ex  0.39/  0.6  Ey  0.49/  1.1  Ez  0.34/  1.7  Hx  0.36/  1.0  Hy  0.19/  0.6  Hz  1.99/  5.3
+total  hill30       f =      0.1 Hz  Ex  0.02/  0.2  Ey  0.25/  1.3  Ez  1.45/  4.3  Hx  0.09/  0.3  Hy  0.26/  0.3  Hz  0.24/  0.8
+total  depression30 f =      0.1 Hz  Ex  0.03/  0.1  Ey  0.28/  1.6  Ez  1.40/  4.3  Hx  0.38/  1.4  Hy  0.23/  0.3  Hz  1.16/  2.6
+total  hill90       f =      0.1 Hz  Ex  0.03/  0.4  Ey  0.22/  1.0  Ez  0.46/  2.0  Hx  0.15/  0.5  Hy  0.28/  0.4  Hz  0.38/  1.0
+total  depression90 f =      0.1 Hz  Ex  0.09/  0.3  Ey  0.43/  1.3  Ez  0.50/  1.8  Hx  0.53/  1.4  Hy  0.25/  0.3  Hz  0.55/  1.5
+total  hill30       f =       10 Hz  Ex  0.04/  0.2  Ey  0.27/  1.3  Ez  1.47/  4.4  Hx  0.13/  0.3  Hy  0.11/  0.2  Hz  0.32/  0.7
+total  depression30 f =       10 Hz  Ex  0.05/  0.1  Ey  0.28/  1.5  Ez  1.41/  4.4  Hx  0.50/  1.5  Hy  0.09/  0.2  Hz  1.04/  3.0
+total  hill90       f =       10 Hz  Ex  0.05/  0.4  Ey  0.31/  1.0  Ez  0.46/  2.0  Hx  0.15/  0.5  Hy  0.12/  0.2  Hz  0.34/  1.0
+total  depression90 f =       10 Hz  Ex  0.10/  0.3  Ey  0.42/  1.2  Ez  0.53/  1.9  Hx  0.51/  1.4  Hy  0.11/  0.2  Hz  0.69/  1.9
+total  hill30       f =    1e+03 Hz  Ex  0.26/  0.8  Ey  0.68/  1.4  Ez  1.03/  2.4  Hx  0.53/  1.0  Hy  0.21/  0.6  Hz  5.37/ 13.7
+total  depression30 f =    1e+03 Hz  Ex  0.34/  0.7  Ey  0.68/  1.8  Ez  1.18/  3.4  Hx  0.63/  1.1  Hy  0.21/  0.6  Hz  6.90/ 14.6
+total  hill90       f =    1e+03 Hz  Ex  0.22/  0.9  Ey  0.84/  1.3  Ez  0.45/  1.2  Hx  0.69/  1.3  Hy  0.22/  0.6  Hz  1.94/  7.7
+total  depression90 f =    1e+03 Hz  Ex  0.39/  0.6  Ey  0.49/  1.1  Ez  0.34/  1.7  Hx  0.36/  1.0  Hy  0.19/  0.6  Hz  1.99/  5.3

@@ -23,7 +23,7 @@ TEX = r"""\documentclass[11pt,a4paper]{article}
 \maketitle
 \thispagestyle{empty}
 Validation of the series solution of this package against two independent codes: the 1-D code empymod for the flat
-model, and the 3-D finite-element code elfe3D for Gaussian topography (hills and valleys of $\pm30$ m and $\pm90$ m,
+model, and the 3-D finite-element code elfe3D for Gaussian topography (hills and depressions of $\pm30$ m and $\pm90$ m,
 width 150 m) and for a conductive sphere under the 90 m hill.  Four sources (grounded wire in line and broadside,
 offset loop, large loop around the hill), three layers with interfaces at 200 m and 600 m depth, receivers on the
 x- and y-profile from $-600$ m to 600 m every 20 m, frequencies 0.1 Hz, 10 Hz and 1 kHz; the flat model also in
