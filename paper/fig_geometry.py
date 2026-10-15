@@ -28,7 +28,7 @@ b = ax[1]
 xs = np.linspace(-700, 700, 701)
 for H, ls in [(30.0, '-'), (90.0, ':')]:
     b.plot(xs, h(xs, 0, H), color=C['hill'], ls=ls, label=f'hill, H = {H:.0f} m')
-    b.plot(xs, h(xs, 0, -H), color=C['depression'], ls=ls, label=f'depression, H = {H:.0f} m')
+    b.plot(xs, h(xs, 0, -H), color=C['depression'], ls=ls, label=f'depression, H = {-H:.0f} m')
 b.axhline(0, color=C['flat'], lw=0.8)
 b.text(-650, -120, r'$\sigma$ = 0.01 S/m', fontsize=7); b.text(-650, 110, r'air, $\sigma$ = 0', fontsize=7)
 b.set_ylim(-150, 150); b.set_xlabel('x (m)'); b.set_ylabel('z (m)')

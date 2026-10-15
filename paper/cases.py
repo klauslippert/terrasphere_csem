@@ -2,7 +2,7 @@
 at the origin, receivers on the two profiles through the summit (x- and y-axis), top layer 0.01 S/m.
   'wire_halfspace' grounded wire (-500, -1500) .. (500, -1500) m, 1 A, over the half-space 0.01 S/m
   'wire_layered'   grounded wire (-500, -1500) .. (500, -1500) m, 1 A, over two layers: 0.01 S/m to 300 m, 0.003 S/m below
-  'wire_sphere'    as 'wire_layered' plus a sphere (radius 60 m, 1 S/m) centred 140 m below the summit
+  'wire_sphere'    as 'wire_layered' plus a sphere (radius 60 m, 1 S/m) centred 140 m below the flat ground (z = -140 m)
 """
 from terrasphere_csem.sources import grounded_wire
 from terrasphere_csem.layers import LayerStack

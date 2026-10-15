@@ -11,6 +11,12 @@ this sphere gives 5-21 % at 0.1 Hz and 10 Hz for T1-T3 (about 1 % at 1 kHz; T4, 
 hill, sees almost nothing).  A sphere in layer 1 (r = 70 m, centre 110 m deep) gives larger anomalies, but under the
 hill the terrain series does not converge for it (estimated truncation error 40-260 %); this sphere has < 5e-4.
 
+## Degree of the sphere
+
+`degree/check_degree.py` repeats the case `T1_wire_inline` with sphere degrees 12, 15 and 20 (without box correction)
+and compares the sphere anomaly; result in `degree/degree.txt`: the change from degree 12 is at most 4e-7 of the
+anomaly maximum (1.8e-6 for the weak E_z anomaly at 1 kHz on the y-profile), so degree 12 is converged.
+
 ## Runs
 
 Per case `cases/<case>/elfe3d/`:
