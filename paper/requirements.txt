@@ -1,2 +1,6 @@
 # Figure scripts of the paper, in addition to ../requirements.txt (exact versions used, 2026-10-15).
+# empymod (with libdlf) is the independent 1-D reference in fig_nulltest, fig_onedim, fig_reflection and fig_latetime
+# (fig_empymod_time only reads stored empymod results).
 matplotlib==3.11.2
+empymod==2.6.0
+libdlf==0.3.0

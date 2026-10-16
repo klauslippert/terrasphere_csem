@@ -39,24 +39,28 @@ gauss   = 96                             # Gauss points along the wire
 # direction = 0.0                        # degrees from x towards y
 # length    = 100.0                      # m
 # current   = 1.0
+# gauss     = 8                          # optional: finite wire of 8 Gauss points; omitted = point dipole of moment I L
 #
 # [[source]]
 # type    = "rectangle"                  # rectangular loop
 # corner1 = [-2000.0, -500.0]
 # corner2 = [-1000.0,  500.0]
 # current = 1.0
+# gauss   = 24                           # Gauss points per side (default 24)
 #
 # [[source]]
 # type    = "polygon"                    # closed polygonal loop
 # corners = [[-2000.0, -500.0], [-1000.0, -500.0], [-1500.0, 500.0]]
 # current = 1.0
+# gauss   = 24                           # Gauss points per side (default 24)
 #
 # [[source]]
 # type     = "circle"                    # circular loop
 # center   = [-1500.0, 0.0]
 # radius   = 300.0
 # current  = 1.0
-# segments = 256
+# segments = 256                         # area-preserving polygon with this many corners (default 256)
+# gauss    = 3                           # Gauss points per polygon side (default 3)
 
 # ---------------------------------------------------------------- receivers
 [receivers]
@@ -66,7 +70,7 @@ spacing     = 20.0                       # receiver spacing [m]
 
 # ---------------------------------------------------------------- frequency OR time domain (give exactly one block)
 [frequencies]
-list = [0.1, 1.0, 1000.0, 100000.0]      # Hz
+list = [0.1, 10.0, 1000.0]               # Hz
 
 # [time]
 # tmin   = 1e-5                          # s; the frequencies follow from the Sine/Cosine filter on a lagged time grid
@@ -84,19 +88,33 @@ formats = ["npz", "csv"]                 # npz and/or csv; each file holds all f
 
 # ---------------------------------------------------------------- numerics (all entries optional, defaults shown)
 [numerics]
-method = "hankel"                        # "hankel": Hankel transform per azimuthal order, no periodic box (default)
-                                         # "fft": 2-D FFT with box correction; needed for a sphere off the hill axis
-m_max      = 40                          # hankel: highest azimuthal order
-n_phi      = 128                         # hankel: azimuth points
-npan_r     = 32                          # hankel: quadrature panels in r
-npan_l     = 32                          # hankel: quadrature panels in the wavenumber
-lam_max    = 0.25                        # hankel: upper wavenumber limit [1/m]
-lowpass    = 0.2                         # smooth wavenumber cut-off [1/m]
-window_radius = 860.0                    # radius [m] beyond which the reference field is tapered off
+method = "hankel"                        # "hankel": Hankel transform per azimuthal order, no periodic box (default);
+                                         #   sphere only on the hill axis
+                                         # "fft": 2-D FFT on a periodic box with box correction; needed for a sphere
+                                         #   off the hill axis
+# both methods:
+orders        = 20                       # number of orders of the height series
+lowpass       = 0.2                      # smooth wavenumber cut-off exp[-(k/lowpass)^16] [rad/m]
+window_radius = 860.0                    # radius [m] beyond which the reference field is tapered off (erfc window)
 window_width  = 40.0                     # width of that taper [m]
+# hankel only:
+m_max   = 40                             # highest azimuthal order
+n_phi   = 128                            # azimuth points
+npan_r  = 32                             # Gauss-Legendre panels in r
+npan_l  = 32                             # Gauss-Legendre panels in the wavenumber
+lam_max = 0.25                           # upper wavenumber limit [rad/m]
 # fft only:
-# n = 512                                # grid points per side
-# dx = 10.0                              # grid spacing [m]
-# orders = 20                            # number of series orders
-# box_correction = true                  # remove the periodic-box error with coarser runs
-# box_fmax = 100.0                       # box correction only up to this frequency [Hz]
+n  = 512                                 # grid points per side
+dx = 10.0                                # grid spacing [m] (box n * dx = 5.12 km)
+# box correction (fft only): coarse runs on three box sizes, Richardson extrapolation of the box error (~ L^-2)
+box_correction = true                    # apply it
+box_fmax       = 100.0                   # only up to this frequency [Hz]; in the time domain faded out towards it
+box_dx         = 20.0                    # grid spacing of the coarse runs [m]
+box_n          = [256, 512, 1024]        # grid points per side of the three coarse runs (boxes 5.12, 10.24, 20.48 km)
+box_lowpass    = 0.12                    # low-pass of the coarse runs [rad/m] (below their Nyquist wavenumber)
+box_orders     = 12                      # orders of the coarse runs
+# time domain only ([time] block):
+fmax_series = 2e6                        # the terrain series is computed only up to this frequency [Hz]
+tolerance   = 1e-3                       # cut-off f_c: last frequency (from 1 Hz up) whose estimated truncation error
+                                         #   stays below tolerance x the largest terrain effect; above f_c the terrain
+                                         #   part is continued as a constant (f_c is written to the results)

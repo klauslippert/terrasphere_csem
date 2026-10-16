@@ -15,8 +15,7 @@ from terrasphere_csem.terrain import optimal_sum
 d = np.load(sys.argv[1])
 fr, x = d['freqs'], d['x']
 sel = np.abs(x) <= 600.0
-# the case names in the file: files written before the English renaming use 'draht_kugel' / 'draht_schichten'
-K, S = ('wire_sphere', 'wire_layered') if 'CE_wire_sphere' in d.files else ('draht_kugel', 'draht_schichten')
+K, S = 'wire_sphere', 'wire_layered'                         # case names of cases.py, as written by coupling.py
 C6 = lambda key, i: np.concatenate([d[f'CE_{key}'][i], d[f'CH_{key}'][i]], axis=1)      # (nord+1, 6, 2, N)
 
 fig, ax = plt.subplots(1, 3, figsize=(7.4, 2.6))

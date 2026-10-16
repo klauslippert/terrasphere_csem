@@ -151,9 +151,10 @@ class Config:
         return Grid(self.sources(), n=n or int(self.numerics['n']), dx=dx or float(self.numerics['dx']), s=self.s,
                     r_win=float(self.numerics['window_radius']), w_win=float(self.numerics['window_width']))
 
-    def sphere_coupling(self, g):
+    def sphere_coupling(self, g, kc=None):
         """Coupling of the sphere to the terrain series for the grid g (HankelGrid: SphereTerrainHankel, Grid:
-        SphereTerrain), or None if the control file has no [sphere] block."""
+        SphereTerrain), or None if the control file has no [sphere] block.  kc: low-pass wavenumber [1/m] of the FFT
+        series that the coupling has to match (default [numerics] lowpass; the box runs pass box_lowpass)."""
         if not self.sphere:
             return None
         from .sphere import SphereModel, Sphere
@@ -162,7 +163,9 @@ class Config:
         k = self.sphere
         km = SphereModel(self.layers, Sphere(float(k['radius']), float(k['conductivity']), float(k.get('mu_r', 1.0))),
                          tuple(k['center']), nmax=int(k.get('degree', 10)))
-        return SphereTerrainHankel(km, g) if isinstance(g, HankelGrid) else SphereTerrain(km, g)
+        if isinstance(g, HankelGrid):
+            return SphereTerrainHankel(km, g)
+        return SphereTerrain(km, g, kc=float(self.numerics['lowpass']) if kc is None else float(kc))
 
     def height(self, x, y, H):
         """Terrain height H exp(-(x^2 + y^2)/(2 s^2)) [m] (z up) of the Gaussian hill (H < 0: depression) at (x, y)."""

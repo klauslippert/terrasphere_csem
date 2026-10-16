@@ -35,7 +35,7 @@ COMPONENTS_E, COMPONENTS_H = ['Ex', 'Ey', 'Ez'], ['Hx', 'Hy', 'Hz']
 def coeff_fft(st, freqs, n, dx, kc, nord, log):
     """Series coefficients with the FFT grid (n points, spacing dx): array (nf, nord + 1, 6, 2, N) of E and H on the profiles, and x."""
     g = st.grid(n=n, dx=dx)
-    kg = st.sphere_coupling(g)
+    kg = st.sphere_coupling(g, kc=kc)                               # same low-pass as the series
     t0 = time.time()
     CE, CH = terrain.coefficients(freqs, g, st.layers, nord=nord, kc=kc, sphere=kg)
     log(f"  grid N = {n}, dx = {dx} m (box {n * dx / 1000:.2f} km), {nord} orders, low-pass {kc}: "
@@ -197,9 +197,26 @@ def write_transients(st, results, fr, Cr, dV, est, header, prof, px, py, log):
     log(f"written: {results}: " + ', '.join(f'transients.{f}' for f in st.formats if f != 'coefficients'))
 
 
+USAGE = """usage: python3 -m terrasphere_csem <control file>      (or <folder>, then <folder>/control.toml)
+
+Computes the fields of the control file and writes them to results/ next to it (log.txt, fields.npz/.csv in the
+frequency domain, transients.npz/.csv in the time domain).  Examples of control files: examples/control.toml and
+examples/control_commented.toml (all options explained).
+
+options:
+  -h, --help   show this help and the description of the output files"""
+
+
 def main():
     """Run the series computation of the control file given on the command line (see the module docstring)."""
-    st = Config(sys.argv[1])
+    args = sys.argv[1:]
+    if args and args[0] in ('-h', '--help'):
+        print(USAGE + '\n\n' + __doc__.split('Usage:')[0].rstrip()); sys.exit(0)
+    if len(args) != 1:
+        print(USAGE, file=sys.stderr); sys.exit(2)
+    if not os.path.exists(args[0]):
+        print(f"terrasphere_csem: control file or folder not found: {args[0]}\n\n{USAGE}", file=sys.stderr); sys.exit(2)
+    st = Config(args[0])
     results = os.path.join(st.folder, 'results'); os.makedirs(results, exist_ok=True)
     logfile = open(os.path.join(results, 'log.txt'), 'w')
 

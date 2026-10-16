@@ -14,15 +14,16 @@ Frequency domain (exact for each degree n):
   Sphere: TE scattering coefficient (Mie b_n, equal mu), scattered field s_n = -b_n c_n with h_n^(1)(k_h r).
   Voltage: V_s(w) = 2 pi a * sum_n s_n h_n(k_h c) P_n^1(cos alpha).
 Time domain: switch-off, V_off(t) = -(2/pi) int_0^inf Re V(w) sin(w t)/w dw  (V(0) = 0), digital filter
-  key_201_CosSin_2012 (empymod).
+  key_201_2012 (Key 2012, embedded in terrasphere_csem/filters).
 Usage: python singh_multipole.py  -> self checks (the second one against nabighian_multipole.py)."""
 import os, sys
 import numpy as np
 from scipy.special import spherical_jn, spherical_yn, lpmv
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.abspath(os.path.join(HERE, '..', '..')))
 MU0 = 4e-7 * np.pi
-from empymod import filters as _flt
-_F = _flt.key_201_CosSin_2012()
+from terrasphere_csem import filters as _flt
+_F = _flt.key_201_2012()
 
 
 def k_of(sig, w):

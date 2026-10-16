@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Figure chain_time: verification chain in the time domain (1:100 design, coaxial loop): terrasphere_csem vs stage 2 (half-space), stage 1
-(full space), Nabighian 1970 (free space), and Lee 1983 (dipole approximation).
+"""Figure chain_time: verification chain in the time domain (1:100 design, coaxial loop): terrasphere_csem vs the single-order references of
+tests/reference (half-space: lee1981_coaxial, full space: singh_multipole), Nabighian 1970 (free space), and Lee 1983 (dipole approximation).
 Usage: python3 fig_chain_time.py <output-dir>"""
 import os, sys
 import numpy as np
@@ -27,7 +27,7 @@ ref = {'halfspace': L2.Vs_time(T, A, H, B, sh, ss, nmax=15), 'fullspace': S1.Vs_
 lee = np.array([lee_Vs(A, B, H, 0.0, 1.0, sh, ss, t)['total'] for t in T])
 tau1 = 4e-7 * np.pi * ss * B ** 2 / np.pi ** 2
 fig, ax = plt.subplots(1, 2, figsize=(8.5, 3))
-for i, (name, lab) in enumerate((('halfspace', 'half-space (stage 2: Lee 1981 physics, all $n$)'), ('fullspace', 'full space (stage 1: Singh 1973)'), ('freespace', 'free space (Nabighian 1970)'))):
+for i, (name, lab) in enumerate((('halfspace', 'half-space (reference: Lee 1981 physics, all $n$)'), ('fullspace', 'full space (reference: Singh 1973)'), ('freespace', 'free space (Nabighian 1970)'))):
     ax[0].loglog(T / tau1, np.abs(out[name]), '-', color=COL[i], label='terrasphere_csem, ' + lab.split(' (')[0]); ax[0].loglog(T / tau1, np.abs(ref[name]), 'o', ms=3, mfc='none', color=COL[i], label=lab.split(': ')[-1].rstrip(')') if ': ' in lab else lab.split(' (')[1].rstrip(')'))
     ax[1].semilogx(T / tau1, out[name] / ref[name], 'o-', ms=3, color=COL[i], label=lab.split(' (')[0])
 ax[0].loglog(T / tau1, np.abs(lee), 'k--', label='Lee 1983 ($n=1$, static kernels)')
