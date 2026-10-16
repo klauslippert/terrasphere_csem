@@ -73,9 +73,7 @@ class Config:
         self.s = float(g['width']); self.heights = [float(v) for v in g.get('heights', [0.0])]
         sch = d['layers']
         self.layers = LayerStack(sch['depths'], sch['conductivity'])
-        if self.layers.J > 1:
-            assert self.layers.depths[1] > -min(0.0, min(self.heights)), \
-                "all layer interfaces must lie below the bottom of the depression"
+        # interfaces below the bottom of the depression: checked by checks.check (main program)
         self.sphere = d.get('sphere')
         if ('frequencies' in d) == ('time' in d):
             raise ValueError("give either [frequencies] or [time]")
@@ -92,7 +90,7 @@ class Config:
         self.formats = [f.lower() for f in a.get('formats', ['npz'])]
         assert set(self.formats) <= {'npz', 'csv', 'coefficients'} and set(self.formats) & {'npz', 'csv'}, \
             "output.formats: npz and/or csv, optionally coefficients"
-        e = d['receivers']
+        e = d.get('receivers', {})
         self.profiles = list(e.get('profiles', ['x', 'y']))
         self.half_length = float(e.get('half_length', 600.0)); self.spacing = float(e.get('spacing', 20.0))
         self.numerics = dict(NUMERICS); self.numerics.update(d.get('numerics', {}))

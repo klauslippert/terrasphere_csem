@@ -1,6 +1,7 @@
 # Example control file for terrasphere_csem, all options explained.
 # Units: SI.  Horizontal positions (x, y) on the surface; z points up; depths are positive downwards.
 # Run:  python3 -m terrasphere_csem <this file>   (results in results/ next to it).
+# The file is checked before the computation (terrasphere_csem/checks.py); errors stop the run unless -f is given.
 
 name = "example_hill_depression_sphere"  # label of the run (default: folder name)
 

@@ -197,25 +197,40 @@ def write_transients(st, results, fr, Cr, dV, est, header, prof, px, py, log):
     log(f"written: {results}: " + ', '.join(f'transients.{f}' for f in st.formats if f != 'coefficients'))
 
 
-USAGE = """usage: python3 -m terrasphere_csem <control file>      (or <folder>, then <folder>/control.toml)
+USAGE = """usage: python3 -m terrasphere_csem [-f] <control file>      (or <folder>, then <folder>/control.toml)
 
 Computes the fields of the control file and writes them to results/ next to it (log.txt, fields.npz/.csv in the
 frequency domain, transients.npz/.csv in the time domain).  Examples of control files: examples/control.toml and
 examples/control_commented.toml (all options explained).
 
+Before the computation the control file is checked (terrasphere_csem/checks.py: unknown keys, ranges, layers,
+position of the sphere, sources and receivers relative to the window, slope, frequency limits, FFT box).  Errors
+stop the program, warnings are printed and written to log.txt.
+
 options:
+  -f, --force  compute even if the checks report errors
   -h, --help   show this help and the description of the output files"""
 
 
 def main():
     """Run the series computation of the control file given on the command line (see the module docstring)."""
     args = sys.argv[1:]
-    if args and args[0] in ('-h', '--help'):
+    if any(a in ('-h', '--help') for a in args):
         print(USAGE + '\n\n' + __doc__.split('Usage:')[0].rstrip()); sys.exit(0)
-    if len(args) != 1:
+    force = any(a in ('-f', '--force') for a in args)
+    args = [a for a in args if a not in ('-f', '--force')]
+    if len(args) != 1 or args[0].startswith('-'):
         print(USAGE, file=sys.stderr); sys.exit(2)
     if not os.path.exists(args[0]):
         print(f"terrasphere_csem: control file or folder not found: {args[0]}\n\n{USAGE}", file=sys.stderr); sys.exit(2)
+    from terrasphere_csem.checks import check, report
+    issues = check(args[0])
+    print(report(issues), flush=True)
+    if any(i.level == 'error' for i in issues):
+        if not force:
+            print("terrasphere_csem: stopped because of the errors above; use -f to compute anyway", file=sys.stderr)
+            sys.exit(1)
+        print("terrasphere_csem: -f given, computing despite the errors", flush=True)
     st = Config(args[0])
     results = os.path.join(st.folder, 'results'); os.makedirs(results, exist_ok=True)
     logfile = open(os.path.join(results, 'log.txt'), 'w')
@@ -225,6 +240,7 @@ def main():
         print(s, flush=True); logfile.write(s + '\n'); logfile.flush()
     log(f"# {st.name}  {time.strftime('%Y-%m-%d %H:%M:%S')} (server time, UTC)")
     log(open(st.file).read())
+    log(report(issues) + ('\n(-f: computed despite the errors)' if force and any(i.level == 'error' for i in issues) else ''))
     nu = st.numerics
     px, py, prof = st.receivers()
     fr = st.freqs if st.domain == 'frequency' else st.freqs[st.freqs <= float(nu['fmax_series'])]

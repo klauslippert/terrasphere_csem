@@ -16,6 +16,12 @@ One control file in, the results out:
 
     python3 -m terrasphere_csem path/to/control.toml
     python3 -m terrasphere_csem --help          # usage and the description of the output files
+    python3 -m terrasphere_csem -f path/to/control.toml   # compute even if the input checks report errors
+
+Before every computation the control file is checked (`terrasphere_csem/checks.py`): unknown keys, ranges, the
+layers, the position of the sphere (inside one layer, below the terrain, on the hill axis for `hankel`), sources and
+receivers relative to the window of the expansion, slope, frequency limits and the FFT box.  Errors stop the program
+(unless `-f`), warnings are printed; both are written to `log.txt`.
 
 The results are written to `results/` next to the control file:
 
