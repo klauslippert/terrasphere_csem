@@ -1,0 +1,40 @@
+# Example layered_f: layered earth, frequency domain, no sphere, flat ground.
+#
+# The simplest use of the program: the electromagnetic field of a grounded wire over a horizontally layered
+# earth (three layers).  The terrain block is still required; with the single height 0 the ground is flat
+# and the result is the layered-earth (1-D) field.
+#
+# Run (from the repository root):   python3 -m terrasphere_csem examples/layered_f
+# Results:                           examples/layered_f/results/  (fields.npz, fields.csv, log.txt)
+# All options of the control file are explained in examples/control_commented.toml.
+# Units: SI.  x, y horizontal, z up, depths positive downwards.
+
+name = "layered_f"
+
+[terrain]
+width   = 150.0                  # width s of the Gaussian hill [m]; irrelevant here because the height is 0
+heights = [0.0]                  # H = 0: flat ground
+
+[layers]
+depths       = [0.0, 200.0, 600.0]    # depths of the layer tops [m]; the last layer is a half-space
+conductivity = [0.01, 0.005, 0.03]    # S/m, one value per layer (100, 200 and 33 Ohm m)
+
+# Grounded wire along the x axis, 500 m long, 1.5 km to the left of the origin, 1 A.
+[[source]]
+type    = "wire"
+start   = [-1750.0, 0.0]
+end     = [-1250.0, 0.0]
+current = 1.0                    # A
+gauss   = 96                     # Gauss points along the wire
+
+# Receivers on the surface along the x axis (y = 0) and the y axis (x = 0), from -600 m to +600 m.
+[receivers]
+profiles    = ["x", "y"]
+half_length = 600.0              # m
+spacing     = 20.0               # m
+
+[frequencies]
+list = [0.1, 10.0, 1000.0]       # Hz
+
+[output]
+formats = ["npz", "csv"]         # fields.npz and fields.csv: E (V/m) and H (A/m) at the receivers

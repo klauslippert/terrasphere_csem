@@ -73,7 +73,7 @@ def test_errors():
     assert E((('method = "fft"', 'method = "hankel"'), ('center = [0.0, 0.0, 140.0]', 'center = [50.0, 0.0, 140.0]')),
              "needs the sphere on the hill axis")
     assert E((('start = [-500.0, -1500.0]', 'start = [-500.0, -900.0]'), ('end = [500.0, -1500.0]', 'end = [500.0, -900.0]')),
-             "inside the window")
+             "too close to the hill")
     assert E((('half_length = 600.0', 'half_length = 800.0'),), "beyond the exact part of the window")
     assert E((('spacing = 20.0', 'spacing = 25.0'),), "not a multiple of dx")
     assert E((('heights = [0.0, 30.0, -30.0]', 'heights = [0.0, 260.0]'), ('[sphere]', '[unused]'),
@@ -83,6 +83,24 @@ def test_errors():
                       ('heights = [0.0, 30.0, -30.0]', 'heights = [0.0, 260.0]'), ('depths = [0.0, 300.0]', 'depths = [0.0]'),
                       ('conductivity = [0.01, 0.003]', 'conductivity = [0.01]')))
     assert _has(iss, 'error', 'beyond the convergence radius'), [str(i) for i in iss]
+
+
+def test_window_limits():
+    """Limits of sources and receivers: fft 1084 / 698 m, hankel 1230 / 680 m from the summit (default window); they
+    hold with terrain and, through the sphere coupling, on flat ground with a sphere, but not for a flat model
+    without sphere."""
+    src = lambda y: (('start = [-500.0, -1500.0]', f'start = [-500.0, {y}]'), ('end = [500.0, -1500.0]', f'end = [500.0, {y}]'))
+    hank = (('method = "fft"', 'method = "hankel"'),)
+    flat = (('heights = [0.0, 30.0, -30.0]', 'heights = [0.0]'),)
+    nosphere = (('[sphere]\nradius = 60.0\nconductivity = 1.0\ncenter = [0.0, 0.0, 140.0]\ndegree = 10\n', ''),)
+    err = lambda rep, word: _has(_run(BASE, rep), 'error', word)
+    assert not err(src(-1100.0), 'too close') and err(src(-1080.0), 'too close')                  # fft: 1084 m
+    assert not err(src(-1240.0) + hank, 'too close') and err(src(-1200.0) + hank, 'too close')    # hankel: 1230 m
+    assert err(src(-1080.0) + flat, 'too close')                                                  # flat, sphere
+    assert not err(src(-900.0) + flat + nosphere, 'too close')                                    # flat, no sphere
+    rec = (('half_length = 600.0', 'half_length = 690.0'), ('spacing = 20.0', 'spacing = 10.0'))
+    assert not err(rec, 'beyond the exact part') and err(rec + hank, 'beyond the exact part')     # 698 / 680 m
+    assert not err((('half_length = 600.0', 'half_length = 800.0'),) + flat + nosphere, 'beyond the exact part')
 
 
 def test_warnings():

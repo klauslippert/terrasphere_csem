@@ -1,0 +1,52 @@
+# Example layered_sphere_t: conductive sphere in a layered earth, time domain, flat ground.
+#
+# The transient response (switch-off of the current in a rectangular transmitter loop) of a conductive sphere in
+# the middle layer of a three-layer earth.  The ground is flat (height 0); the sphere is the only anomaly.
+# The transients are obtained from the frequency-domain fields by a digital Sine/Cosine filter.
+#
+# Run (from the repository root):   python3 -m terrasphere_csem examples/layered_sphere_t
+# Results:                           examples/layered_sphere_t/results/  (transients.npz, transients.csv, log.txt)
+# All options of the control file are explained in examples/control_commented.toml.
+# Units: SI.  x, y horizontal, z up, depths positive downwards.
+
+name = "layered_sphere_t"
+
+[terrain]
+width   = 150.0                  # irrelevant here because the height is 0
+heights = [0.0]                  # H = 0: flat ground
+
+[layers]
+depths       = [0.0, 200.0, 600.0]    # depths of the layer tops [m]; the last layer is a half-space
+conductivity = [0.01, 0.005, 0.03]    # S/m, one value per layer
+
+# Conductive sphere (10 Ohm m) in the middle layer.  It must lie inside one layer and below the ground.
+[sphere]
+radius       = 80.0              # m
+conductivity = 0.1               # S/m
+mu_r         = 1.0               # relative permeability (1 = non-magnetic)
+center       = [0.0, 0.0, 400.0] # x, y, depth [m]; on the hill axis (x = y = 0) for the default method "hankel"
+degree       = 10                # highest multipole degree of the sphere response
+
+# Rectangular transmitter loop 1 km x 1 km, its centre 1.8 km to the left of the origin, 1 A.  With a sphere the
+# sources must lie more than 1230 m from the origin (method "hankel", default window), also on flat ground: the
+# sphere coupling uses the grid of the terrain expansion.  The nearest side of the loop is at 1300 m.
+[[source]]
+type    = "rectangle"
+corner1 = [-2300.0, -500.0]
+corner2 = [-1300.0,  500.0]
+current = 1.0                    # A
+gauss   = 24                     # Gauss points per side
+
+[receivers]
+profiles    = ["x", "y"]         # along the x axis (y = 0) and the y axis (x = 0)
+half_length = 600.0              # m
+spacing     = 20.0               # m
+
+# Time domain instead of [frequencies]: give exactly one of the two blocks.
+[time]
+tmin   = 1e-4                    # s
+tmax   = 1.0                     # s
+signal = "off"                   # "off": response to the switch-off of the current; "on": switch-on step
+
+[output]
+formats = ["npz", "csv"]         # transients.npz and transients.csv: E (V/m), dB/dt (T/s) and B (T) for a 1 A step

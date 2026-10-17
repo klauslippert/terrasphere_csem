@@ -38,6 +38,14 @@ Control files: `examples/control.toml` (a short example) and `examples/control_c
 explained): terrain (width, heights), layers, optional sphere, sources, receiver profiles, frequencies or time window,
 output and numerics.
 
+Three commented examples, one folder each (`_f`: frequency domain, `_t`: time domain), run from the repository root:
+
+    python3 -m terrasphere_csem examples/layered_f               # layered earth, flat ground, grounded wire
+    python3 -m terrasphere_csem examples/layered_sphere_t        # sphere in a layered earth, flat ground, loop, transients
+    python3 -m terrasphere_csem examples/layered_sphere_hill_f   # sphere below a 30 m hill and depression, grounded wire
+
+The results are written to `results/` in each example folder.
+
 ## Tests
 
     python3 tests/run_tests.py                 # all tests (about 45 min)

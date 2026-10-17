@@ -13,8 +13,11 @@ before it starts and stops on errors unless it is called with `-f`.  The thresho
                           the truncation of the sphere part; c_source the distance to the nearest source point,
                           h the distance from the centre to the interfaces resp. to z = 0)
   terrain frequency       f > 1/(pi mu0 sigma_1 H^2) (skin depth not large against H): warning
-  window                  receivers where the window differs from 1 by more than 1e-8, sources where it exceeds
-                          1e-15: error
+  window                  with terrain (a height != 0) or a sphere (its coupling uses the same grid, also on flat
+                          ground): fft: sources where the window exceeds 1e-15, receivers where it differs from 1 by
+                          more than 1e-8; hankel: sources inside r_max + 50 m (radial grid to r_max = R + 8 w),
+                          receivers beyond R - 4.5 w.  With the defaults: sources at least 1084 m (fft) / 1230 m
+                          (hankel) from the summit, receivers within 698 m / 680 m: error
   interfaces near sphere  gap below 10 m: warning
 """
 import os
@@ -233,15 +236,29 @@ def check(path):
         hs = Hmax * np.exp(-(sxy[:, 0] ** 2 + sxy[:, 1] ** 2) / (2 * s ** 2))
         if hs.max() > 1e-6:
             E(f"terrain height {hs.max():.1e} m at a source: sources must lie on the flat ground off the hill")
+    # The source field is singular at the source: the window 0.5 erfc((r - R)/w) must cut it off completely before
+    # the spectral derivatives (fft), and the radial grid of the Hankel route ends at r_max = R + 8 w, 50 m short of
+    # the nearest source (terrain_hankel.HankelGrid).  The grid is built for the terrain series and for the sphere
+    # coupling, so the limits also hold on flat ground when there is a sphere.  The limits are those of the code.
     rs = np.hypot(sxy[:, 0], sxy[:, 1]).min()
-    if 0.5 * erfc((rs - R) / w) > 1e-15:
-        E(f"a source lies {rs:.0f} m from the summit, inside the window of the expansion (needs >= "
-          f"{R + 5.6 * w:.0f} m for window_radius {R:g}, window_width {w:g})")
-
-    # 10. receivers inside the window, on the grid
     rr = np.hypot(px, py).max()
-    if 0.5 * erfc((R - rr) / w) > 1e-8:
-        E(f"receivers reach {rr:.0f} m from the summit, beyond the exact part of the window (<= {R - 4.05 * w:.0f} m)")
+    if Hmax > 0 or sp is not None:
+        why = "the terrain" if Hmax > 0 else "the sphere coupling"
+        if nu['method'] == 'hankel':
+            rs_min, rr_max = R + 8 * w + 50.0, R - 4.5 * w
+            src_bad, rec_bad = rs <= rs_min, rr >= rr_max
+        else:
+            rs_min, rr_max = R + 5.6 * w, R - 4.05 * w
+            src_bad, rec_bad = 0.5 * erfc((rs - R) / w) > 1e-15, 0.5 * erfc((R - rr) / w) > 1e-8
+        if src_bad:
+            E(f"a source lies {rs:.0f} m from the summit: too close to the hill; with {why} sources must lie more "
+              f"than {rs_min:.0f} m from the summit (method {nu['method']}: outside the window of the expansion, "
+              f"window_radius {R:g}, window_width {w:g})")
+
+        # 10. receivers inside the window, on the grid
+        if rec_bad:
+            E(f"receivers reach {rr:.0f} m from the summit, beyond the exact part of the window (with {why} and "
+              f"method {nu['method']}: < {rr_max:.0f} m)")
     if nu['method'] == 'fft':
         dx = float(nu['dx'])
         for v, nm in ((float(rc.get('spacing', 20.0)), 'spacing'), (float(rc.get('half_length', 600.0)), 'half_length')):

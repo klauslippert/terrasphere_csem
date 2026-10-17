@@ -29,4 +29,5 @@ tests/validation/1D/empymod_time/cases/*/empymod/out/parts/
 /build/
 /dist/
 /examples/results/
+/examples/*/results/
 /out/

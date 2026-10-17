@@ -27,6 +27,11 @@ center       = [0.0, 0.0, 220.0]         # x, y, depth [m]; with method = "hanke
 degree       = 10                        # highest multipole degree of the sphere response
 
 # ---------------------------------------------------------------- sources (one or more blocks, fields are summed)
+# With terrain (a height != 0) or a sphere every source point must lie on the flat ground off the hill and outside
+# the window of the expansion (the field is singular at the source and must be cut off by the window).  With the
+# default window: more than 1230 m from the summit for method "hankel" (radial grid up to window_radius +
+# 8 window_width, plus 50 m) and at least 1084 m for "fft" (window_radius + 5.6 window_width).  For a loop this
+# holds for its wire, so a loop may enclose the hill.  Flat models without sphere have no such limit.
 [[source]]
 type    = "wire"                         # wire | dipole | rectangle | polygon | circle
 start   = [-1750.0, 0.0]                 # grounded wire from start to end [m]
@@ -66,7 +71,8 @@ gauss   = 96                             # Gauss points along the wire
 # ---------------------------------------------------------------- receivers
 [receivers]
 profiles    = ["x", "y"]                 # x: along the x-axis (y = 0), y: along the y-axis (x = 0), both through the summit
-half_length = 600.0                      # profiles run from -half_length to +half_length [m]
+half_length = 600.0                      # profiles run from -half_length to +half_length [m]; with terrain or a sphere
+                                         #   below 680 m (hankel) / 698 m (fft) with the defaults, where the window is 1
 spacing     = 20.0                       # receiver spacing [m]
 
 # ---------------------------------------------------------------- frequency OR time domain (give exactly one block)
@@ -96,8 +102,11 @@ method = "hankel"                        # "hankel": Hankel transform per azimut
 # both methods:
 orders        = 20                       # number of orders of the height series
 lowpass       = 0.2                      # smooth wavenumber cut-off exp[-(k/lowpass)^16] [rad/m]
-window_radius = 860.0                    # radius [m] beyond which the reference field is tapered off (erfc window)
-window_width  = 40.0                     # width of that taper [m]
+window_radius = 860.0                    # radius [m] beyond which the reference field is tapered off (erfc window
+                                         #   0.5 erfc((r - window_radius)/window_width)); chosen for width = 150 m
+window_width  = 40.0                     # width of that taper [m].  The window sets the limits for sources
+                                         #   and receivers when there is terrain or a sphere; see [[source]] and
+                                         #   [receivers]
 # hankel only:
 m_max   = 40                             # highest azimuthal order
 n_phi   = 128                            # azimuth points
