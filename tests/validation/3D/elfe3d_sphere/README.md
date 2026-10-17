@@ -46,4 +46,4 @@ The series without the sphere is taken from `../elfe3d_topo/cases/<case>/results
     (cd tests/validation/3D/elfe3d_sphere/report && tectonic report.tex)
 
 giving `cases/<case>/comparison/elfe3d_sphere.txt` (total field and anomaly per frequency and component) and
-`report/report.pdf`.
+`report/report.pdf` (not tracked; part of `validation_report.pdf` in the repository root).

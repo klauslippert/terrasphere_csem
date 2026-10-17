@@ -31,8 +31,9 @@ of the curve), and pointwise |dV| / |V_empymod| where |V_empymod| exceeds 1e-6 o
 component vanishes by symmetry (below 1e-6 of the largest E resp. dB/dt component) are left out of both and reported
 with their level.
 
-Report: `python3 tests/validation/1D/report_empymod_time.py tests/validation/1D/empymod_time`, then compile
-`report/report.tex` (tectonic or pdflatex).
+Report, part of `validation_report.pdf` in the repository root:
+`python3 tests/validation/1D/report_empymod_time.py tests/validation/1D/empymod_time`, then compile `report/report.tex`
+(tectonic or pdflatex).  The report folder is not tracked.
 
 ## Usage
 

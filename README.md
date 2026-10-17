@@ -55,8 +55,20 @@ The results are written to `results/` in each example folder.
   implementations and, in `empymod/`, the 1-D code empymod.
 - `tests/validation/`: comparison with independent codes for complete models, as case folders with control files,
   inputs, results and reports: `1D/empymod` (flat model against empymod), `3D/elfe3d_topo` (hills and depressions
-  against the 3-D finite-element code elfe3D) and `3D/elfe3d_sphere` (sphere under the hill against elfe3D); overall report
-  in `tests/validation/report/`.  See the READMEs there.
+  against the 3-D finite-element code elfe3D) and `3D/elfe3d_sphere` (sphere under the hill against elfe3D).  See the
+  READMEs there.
+
+The validation report is `validation_report.pdf` in the repository root: the conventions of the comparisons and the
+four reports (flat model against empymod in the frequency and time domain, topography and sphere against elfe3D).
+Only this PDF is tracked; the reports are written by scripts from the stored results.  To rebuild it:
+
+    python3 tests/validation/1D/report_empymod.py tests/validation/1D/empymod
+    python3 tests/validation/1D/report_empymod_time.py tests/validation/1D/empymod_time
+    python3 tests/validation/3D/report_elfe3d.py tests/validation/3D/elfe3d_topo
+    python3 tests/validation/3D/report_elfe3d_sphere.py tests/validation/3D/elfe3d_sphere
+    # compile each <folder>/report/report.tex (tectonic or pdflatex), then the overall report:
+    python3 tests/validation/report_overall.py
+    (cd tests/validation/report && tectonic report.tex) && cp tests/validation/report/report.pdf validation_report.pdf
 
 ## Reproducing the paper figures
 

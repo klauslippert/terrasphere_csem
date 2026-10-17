@@ -87,5 +87,6 @@ not kept.  Comparison with the series: `tests/validation/3D/compare_elfe3d.py <c
 <case folder>`.  Regenerate the inputs: `python3 tests/validation/3D/elfe3d_input.py <case folder>` (settings per band in `BANDS`; it
 reproduces the inputs here exactly).
 
-Report `report/report.pdf` (per case and profile: setup and fields of hill and depression, series against elfe3D):
-`python3 tests/validation/3D/report_elfe3d.py tests/validation/3D/elfe3d_topo`, then compile `report/report.tex` (pdflatex or tectonic).
+Report (per case and profile: setup and fields of hill and depression, series against elfe3D), part of
+`validation_report.pdf` in the repository root: `python3 tests/validation/3D/report_elfe3d.py tests/validation/3D/elfe3d_topo`,
+then compile `report/report.tex` (pdflatex or tectonic).  The report folder is not tracked.

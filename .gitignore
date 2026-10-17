@@ -31,3 +31,7 @@ tests/validation/1D/empymod_time/cases/*/empymod/out/parts/
 /examples/results/
 /examples/*/results/
 /out/
+# validation reports: written by the report scripts and compiled locally; only the overall report is tracked, as
+# validation_report.pdf in the repository root
+tests/validation/report/
+tests/validation/*/*/report/

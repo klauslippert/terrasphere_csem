@@ -29,6 +29,6 @@ at 0.1 Hz, where the galvanic parts of the four sides cancel), 40 Gauss points p
 
     PYTHON=/path/to/python ./run_all.sh
 
-Report `report/report.pdf` (per case and profile: setup and fields, series against empymod; table of deviations):
-`python3 tests/validation/1D/report_empymod.py tests/validation/1D/empymod`, then compile `report/report.tex` (pdflatex or
-tectonic).
+Report (per case and profile: setup and fields, series against empymod; table of deviations), part of
+`validation_report.pdf` in the repository root: `python3 tests/validation/1D/report_empymod.py tests/validation/1D/empymod`,
+then compile `report/report.tex` (pdflatex or tectonic).  The report folder is not tracked.

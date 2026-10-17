@@ -5,7 +5,9 @@ with (empymod; elfe3D with TetGen and MUMPS), followed by the four reports as th
 against empymod), 1D/empymod_time/report/report.pdf (the same in the time domain), 3D/elfe3d_topo/report/report.pdf
 (topography against elfe3D), 3D/elfe3d_sphere/report/report.pdf (sphere under the hill against elfe3D); build them
 first.
-Writes report/report.tex next to this script; compile it there (tectonic or pdflatex, needs pdfpages).
+Writes report/report.tex next to this script; compile it there (tectonic or pdflatex, needs pdfpages) and copy
+report/report.pdf to validation_report.pdf in the repository root, the only tracked copy (the report folders are not
+tracked).
 Usage: python3 report_overall.py"""
 import os
 
