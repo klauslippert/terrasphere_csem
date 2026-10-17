@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "terrasphere_csem"
+abstract: >-
+  Semi-analytic frequency- and time-domain electromagnetic fields of grounded wires,
+  dipoles and loops over a layered earth with a Gaussian hill or depression and an
+  optional conductive sphere (quasi-static). Validated against empymod and elfe3D.
+authors:
+  - family-names: "Lippert"
+    given-names: "Klaus"
+    orcid: "https://orcid.org/0000-0002-7662-9548"
+version: "1.0.0"
+license: MIT
+repository-code: "https://github.com/klauslippert/terrasphere_csem"
+keywords:
+  - geophysics
+  - electromagnetics
+  - controlled-source electromagnetics
+  - transient electromagnetics
+  - topography
+  - semi-analytic

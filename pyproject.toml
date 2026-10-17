@@ -9,8 +9,8 @@ description = "Semi-analytic frequency- and time-domain EM responses of a conduc
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Klaus Lippert" }]
-# tomllib (control files) needs Python >= 3.11; developed and tested with Python 3.13 (numpy 2.4, scipy 1.17)
-# and Python 3.15 (numpy 2.5, scipy 1.18); empymod 2.6 for the comparison tests.
+# tomllib (control files) needs Python >= 3.11; tested with Python 3.15.0 (numpy 2.5.4, scipy 1.18.1, the exact
+# versions of requirements.txt) and Python 3.13.5 (numpy 2.4.3, scipy 1.17.1); empymod 2.6.0 for the comparison tests.
 requires-python = ">=3.11"
 dependencies = [
     "numpy",

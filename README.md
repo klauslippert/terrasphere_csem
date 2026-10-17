@@ -2,7 +2,8 @@
 
 `terrasphere_csem` computes the frequency- and time-domain electromagnetic fields of grounded wires, dipoles and loops
 over a layered earth with a Gaussian hill or depression and an optional conductive sphere below it (quasi-static, no
-displacement currents).
+displacement currents).  It is validated against [empymod](https://github.com/emsig/empymod) and
+[elfe3D](https://github.com/emsig/elfe3d) (see `validation_report.pdf`).
 
 ## Installation
 
