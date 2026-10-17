@@ -1,5 +1,7 @@
 # Semi-analytic reference solutions for 3D controlled-source electromagnetics: a conductive sphere beneath Gaussian topography in a layered earth
 
+[![DOI](https://zenodo.org/badge/1414016660.svg)](https://doi.org/10.5281/zenodo.23434783)
+
 `terrasphere_csem` computes the frequency- and time-domain electromagnetic fields of grounded wires, dipoles and loops
 over a layered earth with a Gaussian hill or depression and an optional conductive sphere below it (quasi-static, no
 displacement currents).  It is validated against [empymod](https://github.com/emsig/empymod) and
