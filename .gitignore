@@ -35,3 +35,6 @@ tests/validation/1D/empymod_time/cases/*/empymod/out/parts/
 # validation_report.pdf in the repository root
 tests/validation/report/
 tests/validation/*/*/report/
+# quick-look profile plots of plot_profiles_freq.py / plot_profile.py (the comparisons are in validation_report.pdf)
+tests/validation/3D/*/cases/*/comparison/profile_*.png
+tests/validation/3D/*/cases/*/comparison/profile_*.pdf
