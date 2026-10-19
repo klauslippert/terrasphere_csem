@@ -1,5 +1,7 @@
 # Semi-analytic reference solutions for 3D controlled-source electromagnetics: a conductive sphere beneath Gaussian topography in a layered earth
 
+This code accompanies the preprint https://doi.org/10.31223/X5X227.
+
 [![DOI](https://zenodo.org/badge/1414016660.svg)](https://doi.org/10.5281/zenodo.23434783)
 
 `terrasphere_csem` computes the frequency- and time-domain electromagnetic fields of grounded wires, dipoles and loops

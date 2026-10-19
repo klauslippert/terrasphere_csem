@@ -22,3 +22,13 @@ keywords:
   - transient electromagnetics
   - topography
   - semi-analytic
+preferred-citation:
+  type: article
+  title: "Semi-analytic reference solutions for 3D controlled-source electromagnetics: a conductive sphere beneath Gaussian topography in a layered earth"
+  authors:
+    - family-names: "Lippert"
+      given-names: "Klaus"
+      orcid: "https://orcid.org/0000-0002-7662-9548"
+  journal: "EarthArXiv (preprint)"
+  year: 2026
+  doi: "10.31223/X5X227"
