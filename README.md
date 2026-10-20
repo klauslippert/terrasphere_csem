@@ -41,7 +41,8 @@ Which of npz and csv are written is set by `[output] formats`.  Time dependence 
 
 Control files: `examples/control.toml` (a short example) and `examples/control_commented.toml` (all options
 explained): terrain (width, heights), layers, optional sphere, sources, receivers (profiles through the summit
-and/or free points (x, y) with z on the terrain), frequencies or time window, output and numerics.
+and/or free points (x, y) with z on the terrain), frequencies or time window, output and numerics (among them
+`cpus`, the number of processes that compute the frequencies in parallel).
 
 Three commented examples, one folder each (`_f`: frequency domain, `_t`: time domain), run from the repository root:
 
