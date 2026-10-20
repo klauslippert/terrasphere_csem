@@ -28,7 +28,7 @@ import sys, os, time
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))          # also as a plain script: python3 terrasphere_csem/__main__.py
 import numpy as np
-from terrasphere_csem import terrain, halfspace, timedomain, MU0
+from terrasphere_csem import timedomain, parallel, MU0
 from terrasphere_csem.config import Config
 from terrasphere_csem.terrain import optimal_sum
 
@@ -38,27 +38,29 @@ COMPONENTS_E, COMPONENTS_H = ['Ex', 'Ey', 'Ez'], ['Hx', 'Hy', 'Hz']
 def coeff_fft(st, freqs, n, dx, kc, nord, log, points=None):
     """Series coefficients with the FFT grid (n points, spacing dx): array (nf, nord + 1, 6, 2, N) of E and H on the
     profiles, and x.  With points = (px, py) (receivers on grid points) instead (nf, nord + 1, 6, P) at the points, and
-    None."""
-    g = st.grid(n=n, dx=dx)
-    kg = st.sphere_coupling(g, kc=kc)                               # same low-pass as the series
+    None.  The frequencies run on [numerics] cpus processes (parallel.py)."""
     t0 = time.time()
-    idx = g.point_index(*points) if points is not None else None
-    CE, CH = terrain.coefficients(freqs, g, st.layers, nord=nord, kc=kc, sphere=kg, points=idx)
+    C = parallel.run(st, 'fft', freqs, (n, dx, kc, nord, points))   # (nf, nord+1, 6, 2, N) / (nf, nord+1, 6, P)
     log(f"  grid N = {n}, dx = {dx} m (box {n * dx / 1000:.2f} km), {nord} orders, low-pass {kc}: "
-        f"{len(freqs)} frequencies in {time.time() - t0:.0f} s")
-    return np.concatenate([CE, CH], axis=2), (g.x if points is None else None)   # (nf, nord+1, 6, 2, N) / (.., 6, P)
+        f"{len(freqs)} frequencies in {time.time() - t0:.0f} s" + _cpus(st, freqs))
+    return C, (st.grid(n=n, dx=dx).x if points is None else None)
+
+
+def _cpus(st, freqs):
+    """Log suffix with the number of processes, if more than one."""
+    n = min(int(st.numerics['cpus']), len(np.atleast_1d(freqs)))
+    return f" on {n} processes" if n > 1 else ""
 
 
 def coeff_hankel(st, freqs, log):
     """Series coefficients with the Hankel method: array (nf, nord + 1, 6, P) of E and H at the receivers."""
-    from terrasphere_csem import terrain_hankel
     g = st.hankel_grid()
-    kg = st.sphere_coupling(g)
     t0 = time.time()
-    CE, CH = terrain_hankel.coefficients(freqs, g, st.layers, nord=int(st.numerics['orders']), sphere=kg)
+    C = parallel.run(st, 'hankel', freqs, int(st.numerics['orders']))   # (nf, nord+1, 6, P) at the receivers
     log(f"  Hankel series: |m| <= {g.M}, {len(g.r)} r nodes (0..{g.r_max:.0f} m), {len(g.lam)} lambda nodes "
-        f"(0..{g.lam[-1]:.3f} rad/m), {st.numerics['orders']} orders: {len(freqs)} frequencies in {time.time() - t0:.0f} s")
-    return np.concatenate([CE, CH], axis=2)                          # (nf, nord+1, 6, P) at the receivers
+        f"(0..{g.lam[-1]:.3f} rad/m), {st.numerics['orders']} orders: {len(freqs)} frequencies in {time.time() - t0:.0f} s"
+        + _cpus(st, freqs))
+    return C
 
 
 def at_receivers(C, x, px, py, prof):
@@ -72,19 +74,9 @@ def at_receivers(C, x, px, py, prof):
 
 
 def flat_field(st, freqs, px, py):
-    """Flat-earth field at the receivers for all frequencies: (nf, 6, P) (E_z = 0 on the flat surface)."""
-    q = st.sources()
-    P = halfspace.surface_fields_layered(px, py, freqs, st.layers, q)
-    kg = st.sphere_coupling(st.hankel_grid() if st.numerics['method'] == 'hankel' else st.grid()) if st.sphere else None
-    out = np.zeros((len(freqs), 6, len(px)), complex)
-    for k, c in [(0, 'Ex'), (1, 'Ey'), (3, 'Hx'), (4, 'Hy'), (5, 'Hz')]:
-        out[:, k] = P[c]
-    if kg is not None:
-        for i, f in enumerate(freqs):
-            pk = kg.surface_fields(2 * np.pi * f, q, px, py)
-            for k, c in [(0, 'Ex'), (1, 'Ey'), (3, 'Hx'), (4, 'Hy'), (5, 'Hz')]:
-                out[i, k] += pk[c]
-    return out
+    """Flat-earth field at the receivers for all frequencies: (nf, 6, P) (E_z = 0 on the flat surface), on
+    [numerics] cpus processes."""
+    return parallel.run(st, 'flat', freqs, (px, py))
 
 
 def terrain_effect(st, Cr, log):
@@ -252,6 +244,9 @@ def main():
     log(open(st.file).read())
     log(report(issues) + ('\n(-f: computed despite the errors)' if force and any(i.level == 'error' for i in issues) else ''))
     nu = st.numerics
+    if 'cpus' not in st.d.get('numerics', {}):
+        log(f"note: [numerics] cpus not given, using cpus = 1 (one process); set cpus = n to compute the frequencies "
+            f"on n processes (this machine has {os.cpu_count()} CPUs)")
     px, py, prof = st.receivers()
     fr = st.freqs if st.domain == 'frequency' else st.freqs[st.freqs <= float(nu['fmax_series'])]
     res = None

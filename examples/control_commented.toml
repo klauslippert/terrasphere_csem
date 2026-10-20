@@ -112,6 +112,10 @@ window_radius = 860.0                    # radius [m] beyond which the reference
 window_width  = 40.0                     # width of that taper [m].  The window sets the limits for sources
                                          #   and receivers when there is terrain or a sphere; see [[source]] and
                                          #   [receivers]
+cpus          = 1                        # processes that compute the frequencies in parallel (each with
+                                         #   cpu_count / cpus threads); 1 = one process.  Each process needs its own
+                                         #   memory: about 10 GB with fft, n = 512 and a sphere of degree 12, much
+                                         #   less without sphere; total about cpus x that
 # hankel only:
 m_max   = 40                             # highest azimuthal order
 n_phi   = 128                            # azimuth points

@@ -81,7 +81,36 @@ class SphereTerrain:
             self.Rg0[q] = (Rup0, Rdn)
         self.u_s = u_of(lam, k)                                      # sphere layer
         self.cq = {'TE': lam / (w * MU0), 'TM': -km.sig_h * lam / k}
+        # per-frequency caches of the regular and outgoing spherical-wave spectra at the grid wavenumbers: they
+        # depend on the frequency and m only, not on the order of the terrain series, which reuses them every order
+        self._rows, self._spec = {}, {}
         self._w = w
+
+    def _regular_rows(self, m):
+        """Rows n = 1..N of the regular spectra (A, B) of order m at the grid wavenumbers, for the up- and down-going
+        parts per family (cached per frequency)."""
+        if m not in self._rows:
+            N, k, lam = self.N, self.k, self.lam
+            ATEu, BTEu, ATMu, BTMu = AB_regular_scaled(N, m, 1j * self.u_s, k, lam)
+            ATEd, BTEd, ATMd, BTMd = AB_regular_scaled(N, m, -1j * self.u_s, k, lam)
+            self._rows[m] = {'TE': ((ATEu[1:], BTEu[1:]), (ATEd[1:], BTEd[1:])),
+                             'TM': ((ATMu[1:], BTMu[1:]), (ATMd[1:], BTMd[1:]))}
+        return self._rows[m]
+
+    def _outgoing(self, m, u, lam):
+        """Rows n = 1..N of the outgoing spectra of order m per family, ((M_up, M_down), (N_up, N_down)); cached per
+        frequency for the grid wavenumbers."""
+        cache = lam is self.lam and self._w is not None
+        if cache and m in self._spec:
+            return self._spec[m]
+        N, k = self.N, self.k
+        aMTEu, aMTMu, aNTEu, aNTMu = outgoing_spectrum_scaled(N, m, 1j * u, k, lam)
+        aMTEd, aMTMd, aNTEd, aNTMd = outgoing_spectrum_scaled(N, m, -1j * u, k, lam)
+        spec = {'TE': ((aMTEu[1:], aMTEd[1:]), (aNTEu[1:], aNTEd[1:])),
+                'TM': ((aMTMu[1:], aMTMd[1:]), (aNTMu[1:], aNTMd[1:]))}
+        if cache:
+            self._spec[m] = spec
+        return spec
 
     def _solve(self, m, ch):
         """Solve the balanced sphere system of order m for the regular coefficients ch with the stored LU factorisation;
@@ -98,10 +127,7 @@ class SphereTerrain:
         cq = {'TE': lam / (w * MU0), 'TM': -km.sig_h * lam / k}
         Rg = st.reflections('TE', lam, w), st.reflections('TM', lam, w)
         for m, s_hat in sol.items():
-            aMTEu, aMTMu, aNTEu, aNTMu = outgoing_spectrum_scaled(N, m, 1j * u, k, lam)
-            aMTEd, aMTMd, aNTEd, aNTMd = outgoing_spectrum_scaled(N, m, -1j * u, k, lam)
-            spec = {'TE': ((aMTEu[1:], aMTEd[1:]), (aNTEu[1:], aNTEd[1:])),
-                    'TM': ((aMTMu[1:], aMTMd[1:]), (aNTMu[1:], aNTMd[1:]))}
+            spec = self._outgoing(m, u, lam)
             res = {}
             for iq, q in enumerate(('TE', 'TM')):
                 (Mu, Md), (Nu, Nd) = spec[q]
@@ -133,9 +159,7 @@ class SphereTerrain:
             Pinc[q] = st.propagate(q, lam, w, 0.0, np.zeros_like(lam, dtype=complex), inc[q], km.zc, Rup0, Rdn)
         sol = {}
         for m in self.mlist:
-            ATEu, BTEu, ATMu, BTMu = AB_regular_scaled(N, m, 1j * self.u_s, k, lam)
-            ATEd, BTEd, ATMd, BTMd = AB_regular_scaled(N, m, -1j * self.u_s, k, lam)
-            rows = {'TE': ((ATEu[1:], BTEu[1:]), (ATEd[1:], BTEd[1:])), 'TM': ((ATMu[1:], BTMu[1:]), (ATMd[1:], BTMd[1:]))}
+            rows = self._regular_rows(m)
             ch = np.zeros(2 * N, complex)
             for q in ('TE', 'TM'):
                 Pu, Pd = Pinc[q]
@@ -245,9 +269,7 @@ class SphereTerrainHankel(SphereTerrain):
         lam, wl = self.lam, self.wl
         inc = {'TE': hd[2], 'TM': 1j * lam * hd[1]}                   # H_z and J_z of the down-going part
         ch = np.zeros(2 * N, complex)
-        ATEu, BTEu, ATMu, BTMu = AB_regular_scaled(N, m, 1j * self.u_s, k, lam)
-        ATEd, BTEd, ATMd, BTMd = AB_regular_scaled(N, m, -1j * self.u_s, k, lam)
-        rows = {'TE': ((ATEu[1:], BTEu[1:]), (ATEd[1:], BTEd[1:])), 'TM': ((ATMu[1:], BTMu[1:]), (ATMd[1:], BTMd[1:]))}
+        rows = self._regular_rows(m)
         for q in ('TE', 'TM'):
             Rup0, Rdn = self.Rg0[q]
             Pu, Pd = st.propagate(q, lam, w, 0.0, np.zeros_like(lam, dtype=complex), inc[q], km.zc, Rup0, Rdn)

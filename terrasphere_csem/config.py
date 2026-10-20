@@ -36,6 +36,7 @@ Control file (TOML, SI units; z up, positions on the surface (x, y); depth posit
                                    # results/coefficients.npz (series coefficients, see __main__.py)
     [numerics]                     # defaults in NUMERICS
     method = "hankel"              # hankel (default, no periodic box) | fft (2-D FFT, box correction)
+    cpus = 1                       # processes computing the frequencies in parallel (parallel.py)
     m_max = 40; n_phi = 128; npan_r = 32; npan_l = 32; lam_max = 0.25     # hankel
     n = 512; dx = 10.0; orders = 20; lowpass = 0.2; window_radius = 860.0; window_width = 40.0     # fft
     box_correction = true; box_fmax = 100.0
@@ -47,7 +48,7 @@ import numpy as np
 from .sources import grounded_wire, grounded_dipole, polygon_wire, circular_loop
 from .layers import LayerStack
 
-NUMERICS = dict(method='hankel', m_max=40, n_phi=128, npan_r=32, npan_l=32, lam_max=0.25,
+NUMERICS = dict(method='hankel', cpus=1, m_max=40, n_phi=128, npan_r=32, npan_l=32, lam_max=0.25,
                 n=512, dx=10.0, orders=20, lowpass=0.2, window_radius=860.0, window_width=40.0, fmax_series=2e6,
                 tolerance=1e-3,
                 box_correction=True, box_fmax=100.0, box_dx=20.0, box_n=(256, 512, 1024), box_lowpass=0.12,

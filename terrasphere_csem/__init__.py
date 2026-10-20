@@ -19,4 +19,4 @@ grounded point dipole `grounded_dipole`.  The hill accepts HED-type sources on t
 Time domain (timedomain.py): Key's 201-point sine/cosine filter on a lagged time grid; Talbot inversion.
 """
 MU0 = 4e-7 * 3.141592653589793
-__version__ = "1.1.0"
+__version__ = "1.2.0"

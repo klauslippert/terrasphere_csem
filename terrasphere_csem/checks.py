@@ -166,7 +166,7 @@ def check(path):
     nu = dict(NUMERICS); nu.update(d.get('numerics', {}))
     if nu['method'] not in ('hankel', 'fft'):
         E("[numerics] method must be 'hankel' or 'fft'")
-    for k in ('orders', 'm_max', 'n_phi', 'npan_r', 'npan_l', 'n', 'box_orders'):
+    for k in ('orders', 'm_max', 'n_phi', 'npan_r', 'npan_l', 'n', 'box_orders', 'cpus'):
         if not (isinstance(nu[k], int) and nu[k] >= 1):
             E(f"[numerics] {k} must be an integer >= 1")
     for k in ('lowpass', 'lam_max', 'window_radius', 'window_width', 'dx', 'box_dx', 'box_lowpass', 'box_fmax',
@@ -318,7 +318,11 @@ def check(path):
             W(f"the earliest times need frequencies up to {st.freqs.max():.3g} Hz; the terrain part above fmax_series = "
               f"{nu['fmax_series']:g} Hz and above the cut-off f_c (written to the results) is continued as a constant")
 
-    # 15. output size
+    # 15. processes
+    if nu['cpus'] > (os.cpu_count() or 1):
+        W(f"[numerics] cpus = {nu['cpus']} exceeds the {os.cpu_count()} CPUs of this machine")
+
+    # 16. output size
     if 'coefficients' in fm:
         W("formats contains 'coefficients': results/coefficients.npz is large (about 13 MB per case with fft, n = 512)")
     return out
