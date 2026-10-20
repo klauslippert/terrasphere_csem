@@ -25,6 +25,8 @@ Control file (TOML, SI units; z up, positions on the surface (x, y); depth posit
     [receivers]
     profiles = ["x", "y"]          # profiles through the summit along the x-axis (y = 0) and the y-axis (x = 0)
     half_length = 600.0; spacing = 20.0
+    points = [[200.0, 200.0], [-400.0, 200.0]]   # optional: receivers at arbitrary (x, y); z follows the terrain.
+                                   # Without `profiles` only the points are used; profile label of a point: "p"
     [frequencies]                  # either fixed frequencies ...
     list = [0.1, 1.0, 1000.0, 100000.0]
     # [time]                       # ... or a time window (frequencies follow from the filter, lagged grid)
@@ -91,7 +93,8 @@ class Config:
         assert set(self.formats) <= {'npz', 'csv', 'coefficients'} and set(self.formats) & {'npz', 'csv'}, \
             "output.formats: npz and/or csv, optionally coefficients"
         e = d.get('receivers', {})
-        self.profiles = list(e.get('profiles', ['x', 'y']))
+        self.points = [(float(p[0]), float(p[1])) for p in e.get('points', [])]
+        self.profiles = list(e.get('profiles', [] if self.points else ['x', 'y']))
         self.half_length = float(e.get('half_length', 600.0)); self.spacing = float(e.get('spacing', 20.0))
         self.numerics = dict(NUMERICS); self.numerics.update(d.get('numerics', {}))
         self.source_specs = d['source']
@@ -122,7 +125,8 @@ class Config:
         return out
 
     def receivers(self):
-        """Receiver positions (px, py) and the profile index of each: x-profile (y = 0) and/or y-profile (x = 0)."""
+        """Receiver positions (px, py) and the label of each: 'x' on the x-profile (y = 0), 'y' on the y-profile
+        (x = 0), 'p' for the free points of [receivers] points (after the profiles, in the order given)."""
         a = np.arange(-self.half_length, self.half_length + 1e-6, self.spacing)
         px, py, prof = [], [], []
         for p in self.profiles:
@@ -130,7 +134,9 @@ class Config:
                 px += list(a); py += [0.0] * len(a); prof += ['x'] * len(a)
             elif p == 'y':
                 px += [0.0] * len(a); py += list(a); prof += ['y'] * len(a)
-        return np.array(px), np.array(py), prof
+        for x, y in self.points:
+            px.append(x); py.append(y); prof.append('p')
+        return np.array(px, float), np.array(py, float), prof
 
     def hankel_grid(self):
         """HankelGrid for the receivers and the numerical settings of the control file."""

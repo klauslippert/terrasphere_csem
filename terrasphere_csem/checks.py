@@ -34,7 +34,7 @@ KEYS = {
     'terrain': {'width', 'heights'},
     'layers': {'depths', 'conductivity'},
     'sphere': {'radius', 'conductivity', 'mu_r', 'center', 'degree'},
-    'receivers': {'profiles', 'half_length', 'spacing'},
+    'receivers': {'profiles', 'half_length', 'spacing', 'points'},
     'frequencies': {'list'},
     'time': {'tmin', 'tmax', 'signal'},
     'output': {'formats'},
@@ -147,8 +147,16 @@ def check(path):
         if tm.get('signal', 'off') not in ('off', 'on'):
             E("[time] signal must be 'off' or 'on'")
     rc = d.get('receivers', {})
-    if not set(rc.get('profiles', ['x', 'y'])) <= {'x', 'y'}:
+    pts = rc.get('points', [])
+    if not (isinstance(pts, list) and all(isinstance(p, list) and len(p) == 2 and all(_num(v) for v in p)
+                                          for p in pts)):
+        E("[receivers] points must be a list of [x, y] pairs")
+        pts = []
+    profiles = rc.get('profiles', [] if pts else ['x', 'y'])
+    if not (isinstance(profiles, list) and set(profiles) <= {'x', 'y'}):
         E("[receivers] profiles: 'x' and/or 'y'")
+    elif not profiles and not pts:
+        E("[receivers]: no receivers (give profiles and/or points)")
     if not (_num(rc.get('half_length', 600.0)) and rc.get('half_length', 600.0) > 0
             and _num(rc.get('spacing', 20.0)) and rc.get('spacing', 20.0) > 0):
         E("[receivers] half_length and spacing must be > 0")
@@ -260,10 +268,19 @@ def check(path):
             E(f"receivers reach {rr:.0f} m from the summit, beyond the exact part of the window (with {why} and "
               f"method {nu['method']}: < {rr_max:.0f} m)")
     if nu['method'] == 'fft':
-        dx = float(nu['dx'])
-        for v, nm in ((float(rc.get('spacing', 20.0)), 'spacing'), (float(rc.get('half_length', 600.0)), 'half_length')):
-            if abs(v / dx - round(v / dx)) > 1e-9:
-                E(f"[receivers] {nm} = {v:g} m is not a multiple of dx = {dx:g} m: receivers must lie on the FFT grid")
+        # the series is evaluated on the FFT grid (dx) and, for the box correction, on the coarse grids (box_dx)
+        box = (nu['box_correction'] and Hmax > 0 and st.freqs.min() <= float(nu['box_fmax']))
+        for dx, key in [(float(nu['dx']), 'dx')] + ([(float(nu['box_dx']), 'box_dx')] if box else []):
+            on = lambda v: abs(v / dx - round(v / dx)) <= 1e-9
+            if st.profiles:
+                for v, nm in ((st.spacing, 'spacing'), (st.half_length, 'half_length')):
+                    if not on(v):
+                        E(f"[receivers] {nm} = {v:g} m is not a multiple of {key} = {dx:g} m: receivers must lie on "
+                          "the FFT grid")
+            off = [(x, y) for x, y in st.points if not (on(x) and on(y))]
+            if off:
+                E(f"[receivers] {len(off)} point(s) not on the FFT grid ({key} = {dx:g} m), e.g. {off[0]}: with "
+                  f"method fft x and y must be multiples of {key}")
 
     # 11. slope
     if Hmax / s > 1.65:

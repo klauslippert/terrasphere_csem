@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "terrasphere_csem"
-version = "1.0.0"
+version = "1.1.0"
 description = "Semi-analytic frequency- and time-domain EM responses of a conductive sphere in a layered earth and of Gaussian topography"
 readme = "README.md"
 license = { file = "LICENSE" }

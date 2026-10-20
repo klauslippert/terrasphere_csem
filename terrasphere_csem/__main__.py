@@ -8,10 +8,13 @@
       method fft, other points of the profiles) can be evaluated from them without recomputing, and the size of
       each order shows the convergence.  Contents: freqs, method; fft: C (nf, nord + 1, 6, 2, N) = c_n of E and H
       (x, y, z) on the x- and y-profile at the grid points x (N), and the coarse runs of the box correction
-      C_box<N>, x_box<N>; hankel: C_receivers (nf, nord + 1, 6, P) at the receivers.  Not needed for the fields.
+      C_box<N>, x_box<N>; with free receiver points ([receivers] points) instead C_receivers (nf, nord + 1, 6, P)
+      and C_box<N> at the receivers; hankel: C_receivers (nf, nord + 1, 6, P) at the receivers.  Not needed for the
+      fields.
   frequency domain ([frequencies]):  fields.npz / fields.csv  (as chosen in [output] formats: npz, csv)
       E, H (nh, nf, 3, P) complex, e^{-iwt}, components (x, y, z), z up, fields on the terrain (earth side);
-      px, py, pz, profile, error (nh, nf) estimated truncation error relative to the largest flat E resp. H
+      px, py, pz, profile ('x', 'y' or 'p' for a free point), error (nh, nf) estimated truncation error relative to
+      the largest flat E resp. H
   time domain ([time], signal off|on):  transients.npz / transients.csv
       E (V/m), dBdt (T/s), B (T) (nh, nt, 3, P) for a 1 A step of the chosen sign; t; px, py, pz, profile; f_c per H
 Spectrum per height H: V = flat field (closed form + layer correction + sphere, at every frequency) + terrain part
@@ -32,15 +35,18 @@ from terrasphere_csem.terrain import optimal_sum
 COMPONENTS_E, COMPONENTS_H = ['Ex', 'Ey', 'Ez'], ['Hx', 'Hy', 'Hz']
 
 
-def coeff_fft(st, freqs, n, dx, kc, nord, log):
-    """Series coefficients with the FFT grid (n points, spacing dx): array (nf, nord + 1, 6, 2, N) of E and H on the profiles, and x."""
+def coeff_fft(st, freqs, n, dx, kc, nord, log, points=None):
+    """Series coefficients with the FFT grid (n points, spacing dx): array (nf, nord + 1, 6, 2, N) of E and H on the
+    profiles, and x.  With points = (px, py) (receivers on grid points) instead (nf, nord + 1, 6, P) at the points, and
+    None."""
     g = st.grid(n=n, dx=dx)
     kg = st.sphere_coupling(g, kc=kc)                               # same low-pass as the series
     t0 = time.time()
-    CE, CH = terrain.coefficients(freqs, g, st.layers, nord=nord, kc=kc, sphere=kg)
+    idx = g.point_index(*points) if points is not None else None
+    CE, CH = terrain.coefficients(freqs, g, st.layers, nord=nord, kc=kc, sphere=kg, points=idx)
     log(f"  grid N = {n}, dx = {dx} m (box {n * dx / 1000:.2f} km), {nord} orders, low-pass {kc}: "
         f"{len(freqs)} frequencies in {time.time() - t0:.0f} s")
-    return np.concatenate([CE, CH], axis=2), g.x                    # (nf, nord+1, 6, 2, N)
+    return np.concatenate([CE, CH], axis=2), (g.x if points is None else None)   # (nf, nord+1, 6, 2, N) / (.., 6, P)
 
 
 def coeff_hankel(st, freqs, log):
@@ -108,9 +114,13 @@ def apply_box_correction(st, fr, dV, res, receivers, log):
     if not (nu['method'] == 'fft' and nu['box_correction'] and len(fl) and any(H != 0 for H in st.heights)):
         return
     Cb = []
+    free = 'p' in prof                                          # free points: series at the receivers directly
     for nb in nu['box_n']:
-        c, xb = coeff_fft(st, fl, int(nb), float(nu['box_dx']), float(nu['box_lowpass']), int(nu['box_orders']), log)
-        Cb.append(at_receivers(c, xb, px, py, prof)); res[f'C_box{nb}'] = c; res[f'x_box{nb}'] = xb
+        c, xb = coeff_fft(st, fl, int(nb), float(nu['box_dx']), float(nu['box_lowpass']), int(nu['box_orders']), log,
+                          points=(px, py) if free else None)
+        Cb.append(c if free else at_receivers(c, xb, px, py, prof)); res[f'C_box{nb}'] = c
+        if not free:
+            res[f'x_box{nb}'] = xb
     L = [int(nb) * float(nu['box_dx']) for nb in nu['box_n']]
     for ih, H in enumerate(st.heights):
         if H == 0:
@@ -255,6 +265,10 @@ def main():
     elif nu['method'] == 'hankel':
         Cr = coeff_hankel(st, fr, log)                              # (nf, nord+1, 6, P), no periodic box
         res = dict(freqs=fr, C_receivers=Cr, method='hankel')
+    elif 'p' in prof:                                              # fft with free points: at the receivers directly
+        Cr, _ = coeff_fft(st, fr, int(nu['n']), float(nu['dx']), float(nu['lowpass']), int(nu['orders']), log,
+                          points=(px, py))                         # (nf, nord+1, 6, P)
+        res = dict(freqs=fr, C_receivers=Cr, method='fft')
     else:
         C, x = coeff_fft(st, fr, int(nu['n']), float(nu['dx']), float(nu['lowpass']), int(nu['orders']), log)
         res = dict(freqs=fr, x=x, C=C, method='fft')

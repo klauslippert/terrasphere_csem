@@ -40,8 +40,8 @@ The results are written to `results/` next to the control file:
 Which of npz and csv are written is set by `[output] formats`.  Time dependence e^{-iwt}, z points up.
 
 Control files: `examples/control.toml` (a short example) and `examples/control_commented.toml` (all options
-explained): terrain (width, heights), layers, optional sphere, sources, receiver profiles, frequencies or time window,
-output and numerics.
+explained): terrain (width, heights), layers, optional sphere, sources, receivers (profiles through the summit
+and/or free points (x, y) with z on the terrain), frequencies or time window, output and numerics.
 
 Three commented examples, one folder each (`_f`: frequency domain, `_t`: time domain), run from the repository root:
 
@@ -53,7 +53,7 @@ The results are written to `results/` in each example folder.
 
 ## Tests
 
-    python3 tests/run_tests.py                 # all tests (about 45 min)
+    python3 tests/run_tests.py                 # all tests (about 50 min)
     python3 tests/run_tests.py test_mie        # one test file, or a folder such as verification or empymod
 
 - `tests/verification/`: the building blocks and complete fields against analytic solutions, independent reference

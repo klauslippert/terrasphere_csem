@@ -74,6 +74,11 @@ profiles    = ["x", "y"]                 # x: along the x-axis (y = 0), y: along
 half_length = 600.0                      # profiles run from -half_length to +half_length [m]; with terrain or a sphere
                                          #   below 680 m (hankel) / 698 m (fft) with the defaults, where the window is 1
 spacing     = 20.0                       # receiver spacing [m]
+# points    = [[200.0, 200.0], [-400.0, 200.0]]   # optional: receivers at arbitrary (x, y) [m]; z is set to the
+                                         #   terrain height automatically.  Without `profiles` only the points are
+                                         #   used (with it both, profiles first); label "p" in the outputs.  Same
+                                         #   window limits as the profiles; method fft: x and y multiples of dx
+                                         #   (and of box_dx when the box correction applies)
 
 # ---------------------------------------------------------------- frequency OR time domain (give exactly one block)
 [frequencies]
